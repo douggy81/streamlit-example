@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 import streamlit as st
-load_dotenv()
+#load_dotenv()
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
