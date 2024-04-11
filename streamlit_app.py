@@ -84,7 +84,7 @@ if "chat_engine" not in  st.session_state.keys():
         "First make sure you are speaking the right language with the user."
         )
 
-st.set_page_config(page_title="Chat with the Art of Sale Book by Patrick Gassier",
+st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
                    page_icon="",
                    layout="centered",
                    menu_items=None)
@@ -99,7 +99,8 @@ if "messages" not in st.session_state.keys():
     st.session_state.messages=[
         {
             "role": "assistant",
-            "content" : "Ask me a question about the Art of Sale book"
+            "content" : "Ask me a question about the Art of Sale book."
+                        "Posez moi ine question sur le livre Manuel de Formation a la vente"
         }
     ]
 for message in st.session_state.messages:
