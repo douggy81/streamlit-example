@@ -1,5 +1,6 @@
 streamlit
 pinecone-client
 llama-index
+llama-index-vector-stores-postgres
 llama-hub
 google.ai.generativelanguage
