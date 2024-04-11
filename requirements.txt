@@ -2,3 +2,5 @@ altair
 pandas
 streamlit
 pinecone
+llama_index
+google.ai.generativelanguage
