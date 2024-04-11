@@ -88,7 +88,7 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    page_icon="",
                    layout="centered",
                    menu_items=None)
-st.title("Chat with Patrick Gassier book")
+st.title("Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier")
 
 if prompt:= st.chat_input("Your question"):
     st.session_state.messages.append({
@@ -100,7 +100,7 @@ if "messages" not in st.session_state.keys():
         {
             "role": "assistant",
             "content" : "Ask me a question about the Art of Sale book."
-                        "Posez moi ine question sur le livre Manuel de Formation a la vente"
+                        "Posez moi vos questions sur le livre Manuel de Formation a la vente"
         }
     ]
 for message in st.session_state.messages:
