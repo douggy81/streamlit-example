@@ -3,4 +3,5 @@ pandas
 streamlit
 pinecone-client
 llama-index
+llama-index-vector-stores
 google.ai.generativelanguage
