@@ -4,3 +4,4 @@ llama-index
 llama-index-vector-stores-postgres
 llama-hub
 google.ai.generativelanguage
+llama-index-vector-stores-pinecone
