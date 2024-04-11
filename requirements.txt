@@ -2,5 +2,6 @@ streamlit
 pinecone-client
 llama-index
 llama-index-vector-stores-pinecone
+llama-index-llms-gemini
 llama-hub
 google.ai.generativelanguage
