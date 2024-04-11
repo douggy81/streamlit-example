@@ -4,5 +4,4 @@ llama-index
 llama-index-vector-stores-pinecone
 llama-index-llms-gemini
 llama-index-embeddings-gemini
-llama-hub
 google.ai.generativelanguage
