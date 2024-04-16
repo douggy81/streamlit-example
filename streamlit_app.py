@@ -85,10 +85,7 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    page_icon="",
                    layout="centered",
                    menu_items=None)
-title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personel sur les methodologie devente crée par Patrick Gassier "
-st.title(title_text)
 
-st.divider()
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -109,6 +106,13 @@ if confirm_button:
         "role": "assistant",
         "content": initial_message
     }]
+    
+st.divider()
+
+title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personel sur les methodologie devente crée par Patrick Gassier "
+st.title(title_text)
+
+st.divider()
 
 # Chat interface
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
