@@ -93,7 +93,7 @@ st.title("Chat with the Gemini, your personal trainer in sales using a methodolo
 st.divider()
 
 #Language Selection:
-language_select = st.selectbox(label="Language", options=["English", "Francais"], index = 0)
+language_select = st.selectbox(label="Language", options=["English", "Français"], index = 0)
 
 if prompt:= st.chat_input("Your question"):
     st.session_state.messages.append({
@@ -101,11 +101,11 @@ if prompt:= st.chat_input("Your question"):
         "content": prompt
     })
 if "messages" not in st.session_state.keys():
+    initial_message = "Ask me a question about the Art of Sale book."
     st.session_state.messages=[
         {
             "role": "assistant",
-            "content" : "Ask me a question about the Art of Sale book."
-                        "Posez moi vos questions sur le livre Manuel de Formation a la vente"
+            "content" : initial_message
         }
     ]
 for message in st.session_state.messages:
