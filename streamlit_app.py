@@ -85,7 +85,8 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    page_icon="",
                    layout="centered",
                    menu_items=None)
-st.title("Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier")
+title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personel sur les methodologie devente crée par Patrick Gassier "
+st.title(title_text)
 
 st.divider()
 # Ensure 'messages' exists in session state upon script execution
@@ -94,7 +95,7 @@ if "messages" not in st.session_state:
     
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "English"  # Default language
+    st.session_state.selected_language = "Français"  # Default language
 
 temp_language = st.selectbox(label="Choose your language / Choisissez votre langue", options=["English", "Français"], index=["English", "Français"].index(st.session_state.selected_language))
 
