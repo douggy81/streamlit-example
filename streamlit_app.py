@@ -113,7 +113,7 @@ if confirm_button:
     }]
 
 # Chat interface
-prompt = st.chat_input("Your question")+"Reply in the selected language:" st.session_state.selected_language  # Capture user input every time the script reruns
+prompt = st.chat_input("Your question") # Capture user input every time the script reruns
 
 if prompt:
     
