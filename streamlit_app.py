@@ -112,11 +112,11 @@ if confirm_button:
         "content": initial_message
     }]
 
-if prompt:= st.chat_input("Your question"):
-    st.session_state.messages.append({
-        "role": "user",
-        "content": prompt
-    })
+    if prompt:= st.chat_input("Your question"):
+        st.session_state.messages.append({
+            "role": "user",
+            "content": prompt
+        })
     
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
