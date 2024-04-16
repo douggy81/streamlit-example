@@ -123,7 +123,7 @@ if prompt:
     # Capture and display user's question along with the language notice
     st.session_state.messages.append({
         "role": "user",
-        "content": prompt_with_language_notice
+        "content": prompt
     })
 
 
