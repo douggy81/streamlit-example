@@ -79,6 +79,8 @@ if "chat_engine" not in  st.session_state.keys():
         "This book is written by Patrick Gassier, he was born in Marseille in 1949."
         "You will need to greet the user right away and figure out at first a quick intro on what your capable of and what you can help the user with."
         "First make sure you are speaking the right language with the user."
+        "Also, ask for specific details because you are here to help the user on their specific case."
+        "For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation"
         )
 
 st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
