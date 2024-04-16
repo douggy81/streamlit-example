@@ -90,6 +90,8 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    menu_items=None)
 st.title("Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier")
 
+st.divider()
+
 if prompt:= st.chat_input("Your question"):
     st.session_state.messages.append({
         "role": "user",
