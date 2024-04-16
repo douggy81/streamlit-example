@@ -95,12 +95,6 @@ st.divider()
 #Language Selection:
 language_select = st.selectbox(label="Language", options=["English", "Français"], index = 0)
 
-if prompt:= st.chat_input("Your question"):
-    st.session_state.messages.append({
-        "role": "user",
-        "content": prompt
-    })
-
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "English"  # Default language
@@ -117,6 +111,13 @@ if confirm_button:
         "role": "assistant",
         "content": initial_message
     }]
+
+if prompt:= st.chat_input("Your question"):
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
+    
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
