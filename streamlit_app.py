@@ -92,9 +92,6 @@ st.title("Chat with the Gemini, your personal trainer in sales using a methodolo
 
 st.divider()
 
-#Language Selection:
-language_select = st.selectbox(label="Language", options=["English", "Français"], index = 0)
-
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "English"  # Default language
