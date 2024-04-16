@@ -71,6 +71,8 @@ index=get_index()
 if "chat_engine" not in  st.session_state.keys():
     postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
 
+
+
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="context",
         verbose = True,
@@ -91,22 +93,21 @@ st.title("Chat with the Gemini, your personal trainer in sales using a methodolo
 st.divider()
 
 #Language Selection:
-language_select = st.selectbox(label="Language", options=["English", "Français"], index = 0)
+language_select = st.selectbox(label="Language", options=["English", "Francais"], index = 0)
 
 if prompt:= st.chat_input("Your question"):
     st.session_state.messages.append({
         "role": "user",
         "content": prompt
     })
-
-# Handling the initial assistant message based on the selected language
-if not st.session_state.messages:
-    initial_message = "Ask me a question about the Art of Sale book." if language_select == "English" else "Posez moi vos questions sur le livre Manuel de Formation a la vente."
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": initial_message
-    })
-    
+if "messages" not in st.session_state.keys():
+    st.session_state.messages=[
+        {
+            "role": "assistant",
+            "content" : "Ask me a question about the Art of Sale book."
+                        "Posez moi vos questions sur le livre Manuel de Formation a la vente"
+        }
+    ]
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
