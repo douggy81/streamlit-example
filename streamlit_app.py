@@ -44,7 +44,6 @@ llama_debug=LlamaDebugHandler(print_trace_on_end=True)
 callback_manager=CallbackManager(handlers=[llama_debug])
 Settings.callback_manager=callback_manager
 
-
 @st.cache_resource(show_spinner=False)
 def get_index() -> VectorStoreIndex:
     pc = Pinecone(
@@ -70,8 +69,6 @@ index=get_index()
 
 if "chat_engine" not in  st.session_state.keys():
     postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
-
-
 
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="context",
@@ -113,7 +110,8 @@ if confirm_button:
     }]
 
 # Chat interface
-prompt = st.chat_input("Your question") # Capture user input every time the script reruns
+chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
+prompt = st.chat_input(chat_text) # Capture user input every time the script reruns
 
 if prompt:
     
