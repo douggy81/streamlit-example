@@ -112,32 +112,33 @@ if confirm_button:
         "content": initial_message
     }]
 
-    if prompt:= st.chat_input("Your question"):
-        st.session_state.messages.append({
-            "role": "user",
-            "content": prompt
-        })
-    
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-    
-    #Last message
-    # Before accessing the last message, ensure that there is at least one message in the list
-    if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):
-            with st.spinner("zzzZZZzzz..."):
-                response = st.session_state.chat_engine.chat(message=prompt)
-                st.write(response.response)
-    
-                #nodes = [ node for node in response.source_nodes]
-                #for col, node, i in zip(st.columns(len(nodes)), nodes, range(len(nodes))):
-                #    with col:
-                #        st.header(f"Source Node {i+1}: score= {node.score}")
-                #        st.write(node.text)
-                
-                message = {
-                    "role" : "assistant",
-                    "content" :  response.response
-                }
-                st.session_state.messages.append(message)
+# Chat interface
+prompt = st.chat_input("Your question")  # Capture user input every time the script reruns
+
+if prompt:
+    # Capture and display user's question
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+#Last message
+# Before accessing the last message, ensure that there is at least one message in the list
+if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
+    with st.chat_message("assistant"):
+        with st.spinner("zzzZZZzzz..."):
+            response = st.session_state.chat_engine.chat(message=prompt)
+            st.write(response.response)
+
+            #nodes = [ node for node in response.source_nodes]
+            #for col, node, i in zip(st.columns(len(nodes)), nodes, range(len(nodes))):
+            #    with col:
+            #        st.header(f"Source Node {i+1}: score= {node.score}")
+            #        st.write(node.text)
+            
+            message = {
+                "role" : "assistant",
+                "content" :  response.response
+            }
+            st.session_state.messages.append(message)
