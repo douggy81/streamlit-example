@@ -100,14 +100,23 @@ if prompt:= st.chat_input("Your question"):
         "role": "user",
         "content": prompt
     })
-if "messages" not in st.session_state.keys():
-    initial_message = "Ask me a question about the Art of Sale book." if language_select == "English" else "Posez moi vos questions sur le livre Manuel de Formation a la vente."
-    st.session_state.messages=[
-        {
-            "role": "assistant",
-            "content" : initial_message
-        }
-    ]
+
+# Language Selection with the button to confirm selection
+if 'selected_language' not in st.session_state:
+    st.session_state.selected_language = "English"  # Default language
+
+temp_language = st.selectbox(label="Choose your language / Choisissez votre langue", options=["English", "Français"], index=["English", "Français"].index(st.session_state.selected_language))
+
+confirm_button = st.button(label="Confirm / Confirmer")
+
+if confirm_button:
+    st.session_state.selected_language = temp_language
+    # Reset messages to show the initial message in selected language
+    initial_message = "Ask me a question about the Art of Sale book." if st.session_state.selected_language == "English" else "Posez moi vos questions sur le livre Manuel de Formation à la vente."
+    st.session_state.messages = [{
+        "role": "assistant",
+        "content": initial_message
+    }]
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
