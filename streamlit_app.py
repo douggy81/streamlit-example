@@ -86,6 +86,22 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    layout="centered",
                    menu_items=None)
 
+# Custom CSS to inject for setting the background color
+def set_background_color():
+    css_style = """
+    <style>
+    .stApp {
+        background-color: orange;
+    }
+    </style>
+    """
+    st.markdown(css_style, unsafe_allow_html=True)
+
+# Set the background color to orange
+set_background_color()
+
+
+
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
     st.session_state.messages = []
