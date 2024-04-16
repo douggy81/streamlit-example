@@ -92,9 +92,6 @@ st.title("Chat with the Gemini, your personal trainer in sales using a methodolo
 
 st.divider()
 
-#Language Selection:
-language_select = st.selectbox(label="Language", options=["English", "Français"], index = 0)
-
 if prompt:= st.chat_input("Your question"):
     st.session_state.messages.append({
         "role": "user",
