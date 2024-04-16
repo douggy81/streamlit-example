@@ -98,7 +98,9 @@ if prompt:= st.chat_input("Your question"):
         "role": "user",
         "content": prompt
     })
-if "messages" not in st.session_state.keys():
+
+# Handling the initial assistant message based on the selected language
+if not st.session_state.messages:
     initial_message = "Ask me a question about the Art of Sale book." if language_select == "English" else "Posez moi vos questions sur le livre Manuel de Formation a la vente."
     st.session_state.messages.append({
         "role": "assistant",
