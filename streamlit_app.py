@@ -136,7 +136,7 @@ for message in st.session_state.messages:
 if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("zzzZZZzzz..."):
-            response = st.session_state.chat_engine.chat(message=prompt)
+            response = st.session_state.chat_engine.chat(message=prompt_with_language_notice)
             st.write(response.response)
 
             #nodes = [ node for node in response.source_nodes]
