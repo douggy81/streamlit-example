@@ -113,11 +113,19 @@ if confirm_button:
     }]
 
 # Chat interface
-prompt = st.chat_input("Your question")  # Capture user input every time the script reruns
+prompt = st.chat_input("Your question")+"Reply in the selected language:" st.session_state.selected_language  # Capture user input every time the script reruns
 
 if prompt:
-    # Capture and display user's question
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # After capturing the prompt, concatenate the selected language notice
+    prompt_with_language_notice = f"{prompt}\nReply in the selected language: {st.session_state.selected_language}"
+    
+    # Capture and display user's question along with the language notice
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt_with_language_notice
+    })
+
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
