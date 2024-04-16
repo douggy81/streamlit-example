@@ -103,7 +103,7 @@ if "messages" not in st.session_state.keys():
         {
             "role": "assistant",
             "content" : if language_select=="English" then: "Ask me a question about the Art of Sale book."
-                        else if language_select=="Français" then: Posez moi vos questions sur le livre Manuel de Formation a la vente"
+                        else if language_select=="Français" then: "Posez moi vos questions sur le livre Manuel de Formation a la vente"
         }
     ]
 for message in st.session_state.messages:
