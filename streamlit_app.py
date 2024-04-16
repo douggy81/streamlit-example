@@ -135,7 +135,8 @@ for message in st.session_state.messages:
 # Before accessing the last message, ensure that there is at least one message in the list
 if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        with st.spinner("zzzZZZzzz..."):
+        spinner_text = "Processing..." if st.session_state.selected_language == "English" else "En cours de traitement..."
+        with st.spinner("spinner_text"):
             response = st.session_state.chat_engine.chat(message=prompt_with_language_notice)
             st.write(response.response)
 
