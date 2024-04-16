@@ -99,13 +99,12 @@ if prompt:= st.chat_input("Your question"):
         "content": prompt
     })
 if "messages" not in st.session_state.keys():
-    st.session_state.messages=[
-        {
-            "role": "assistant",
-            "content" : if language_select=="English" then: "Ask me a question about the Art of Sale book."
-                        else if language_select=="Français" then: "Posez moi vos questions sur le livre Manuel de Formation a la vente"
-        }
-    ]
+    initial_message = "Ask me a question about the Art of Sale book." if language_select == "English" else "Posez moi vos questions sur le livre Manuel de Formation a la vente."
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": initial_message
+    })
+    
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
