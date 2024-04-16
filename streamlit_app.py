@@ -91,7 +91,10 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
 st.title("Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier")
 
 st.divider()
-
+# Ensure 'messages' exists in session state upon script execution
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+    
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "English"  # Default language
