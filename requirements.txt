@@ -7,3 +7,4 @@ llama-index-embeddings-gemini
 google.ai.generativelanguage
 fpdf
 base64
+unicodedata
