@@ -1,5 +1,6 @@
 #from dotenv import load_dotenv
 import os
+from fpdf import FPDF
 import streamlit as st
 #load_dotenv()
 from pinecone import Pinecone
@@ -45,6 +46,20 @@ callback_manager=CallbackManager(handlers=[llama_debug])
 Settings.callback_manager=callback_manager
 
 @st.cache_resource(show_spinner=False)
+
+def generate_pdf(messages):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    
+    for message in messages:
+        role = message["role"].upper()  # USER or ASSISTANT
+        content = message["content"]
+        pdf.cell(200, 10, txt=f"{role}: {content}", ln=1)
+    
+    pdf.output("chat_history.pdf")
+
+
 def get_index() -> VectorStoreIndex:
     pc = Pinecone(
     api_key=os.environ.get("PINECONE_API_KEY")
@@ -167,3 +182,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 "content" :  response.response
             }
             st.session_state.messages.append(message)
+            
+if st.button("Download Chat as PDF"):
+    generate_pdf(st.session_state.messages)
+    st.success("Chat history saved as 'chat_history.pdf'")
