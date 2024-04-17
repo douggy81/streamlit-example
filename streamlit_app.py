@@ -58,6 +58,7 @@ def generate_pdf(messages):
         pdf.cell(200, 10, txt=f"{role}: {content}", ln=1)
     
     pdf.output("chat_history.pdf")
+    return pdf.output(dest='S').encode('latin-1')  # Get PDF data as bytes
 
 
 def get_index() -> VectorStoreIndex:
@@ -184,5 +185,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             st.session_state.messages.append(message)
             
 if st.button("Download Chat as PDF"):
-    generate_pdf(st.session_state.messages)
-    st.success("Chat history saved as 'chat_history.pdf'")
+    pdf_data = generate_pdf_data(st.session_state.messages)
+    b64_pdf = base64.b64encode(pdf_data).decode()
+    href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="chat_history.pdf">Download PDF</a>'
+    st.markdown(href, unsafe_allow_html=True)
