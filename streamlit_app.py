@@ -101,10 +101,6 @@ def set_light_orange_background():
 # Set the background color to a very light orange
 set_light_orange_background()
 
-    
-title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
-st.title(title_text)
-
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -112,6 +108,9 @@ if "messages" not in st.session_state:
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "Français"  # Default language
+
+title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
+st.title(title_text)
 
 temp_language = st.selectbox(
     label="Choose your language / Choisissez votre langue", 
