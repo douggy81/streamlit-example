@@ -49,17 +49,16 @@ Settings.callback_manager=callback_manager
 
 @st.cache_resource(show_spinner=False)
 
-def generate_pdf(messages):
+def generate_pdf_data(messages):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-    
+
     for message in messages:
         role = message["role"].upper()  # USER or ASSISTANT
         content = message["content"]
         pdf.cell(200, 10, txt=f"{role}: {content}", ln=1)
-    
-    pdf.output("chat_history.pdf")
+
     return pdf.output(dest='S').encode('latin-1')  # Get PDF data as bytes
 
 
