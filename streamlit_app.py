@@ -1,11 +1,5 @@
-#from dotenv import load_dotenv
-
-import unicodedata
 import os
-import base64
-from weasyprint import HTML
 import streamlit as st
-#load_dotenv()
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
@@ -172,23 +166,3 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 "content" :  response.response
             }
             st.session_state.messages.append(message)
-            
-# Assuming you have a list of messages called 'st.session_state.messages'
-chat_content = ""
-for message in st.session_state.messages:
-    role = message["role"].upper()
-    content = message["content"]
-    chat_content += f"<p><strong>{role}:</strong> {content}</p>"  # Build HTML content
-
-chat_html = st.components.v1.html(
-    f"""
-    
-        {chat_content}  
-    
-    """,
-    height=500,  # Adjust height as needed
-)
-
-if st.button("Download Chat as PDF"):
-    HTML(string=chat_html).write_pdf("chat_history.pdf")
-    st.success("Chat history saved as 'chat_history.pdf'")
