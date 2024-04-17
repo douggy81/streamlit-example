@@ -3,7 +3,7 @@
 import unicodedata
 import os
 import base64
-from fpdf import FPDF
+import pdfkit
 import streamlit as st
 #load_dotenv()
 from pinecone import Pinecone
@@ -50,20 +50,6 @@ Settings.callback_manager=callback_manager
 
 @st.cache_resource(show_spinner=False)
 
-def generate_pdf_data(messages):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    for message in messages:
-        role = message["role"].upper()  # USER or ASSISTANT
-        content = message["content"]
-        content = filter_non_latin1(message["content"])
-        pdf.cell(200, 10, txt=f"{role}: {content}", ln=1)
-
-    return pdf.output(dest='S').encode('latin-1')  # Get PDF data as bytes
-
-
 def get_index() -> VectorStoreIndex:
     pc = Pinecone(
     api_key=os.environ.get("PINECONE_API_KEY")
@@ -106,9 +92,6 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    page_icon="",
                    layout="centered",
                    menu_items=None)
-#To filter out non-unicode characters
-def filter_non_latin1(text):
-    return ''.join(c for c in text if 0 < ord(c) < 256)
 
 # Custom CSS to inject for setting the background color to a very light orange
 def set_light_orange_background():
@@ -190,8 +173,15 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             }
             st.session_state.messages.append(message)
             
+chat_html = st.components.v1.html(
+    f"""
+    <div style="font-family: 'YourEmojiFont', sans-serif;">
+        {chat_content}  
+    </div>
+    """,
+    height=500,  # Adjust height as needed
+)
+
 if st.button("Download Chat as PDF"):
-    pdf_data = generate_pdf_data(st.session_state.messages)
-    b64_pdf = base64.b64encode(pdf_data).decode()
-    href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="chat_history.pdf">Download PDF</a>'
-    st.markdown(href, unsafe_allow_html=True)
+    pdfkit.from_string(chat_html, "chat_history.pdf")
+    st.success("Chat history saved as 'chat_history.pdf'")
