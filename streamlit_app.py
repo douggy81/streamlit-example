@@ -110,14 +110,6 @@ if "messages" not in st.session_state:
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "Français"  # Default language
 
-temp_language = st.selectbox(label="Choose your language / Choisissez votre langue", options=["English", "Français"], index=["English", "Français"].index(st.session_state.selected_language))
-
-confirm_button = st.button(label="Confirm / Confirmer")
-
-# Language Selection with the button to confirm selection
-if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "Français"  # Default language
-
 temp_language = st.selectbox(
     label="Choose your language / Choisissez votre langue", 
     options=["English", "Français"],
