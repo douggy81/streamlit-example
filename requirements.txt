@@ -6,3 +6,4 @@ llama-index-llms-gemini
 llama-index-embeddings-gemini
 google.ai.generativelanguage
 fpdf
+pdfkit
