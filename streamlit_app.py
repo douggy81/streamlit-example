@@ -3,7 +3,7 @@
 import unicodedata
 import os
 import base64
-import weasyprint
+from weasyprint import HTML
 import streamlit as st
 #load_dotenv()
 from pinecone import Pinecone
