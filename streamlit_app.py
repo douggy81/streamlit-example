@@ -1,5 +1,6 @@
 #from dotenv import load_dotenv
 
+import unicodedata
 import os
 import base64
 from fpdf import FPDF
@@ -57,6 +58,7 @@ def generate_pdf_data(messages):
     for message in messages:
         role = message["role"].upper()  # USER or ASSISTANT
         content = message["content"]
+        content = filter_non_latin1(message["content"])
         pdf.cell(200, 10, txt=f"{role}: {content}", ln=1)
 
     return pdf.output(dest='S').encode('latin-1')  # Get PDF data as bytes
@@ -104,6 +106,9 @@ st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sa
                    page_icon="",
                    layout="centered",
                    menu_items=None)
+#To filter out non-unicode characters
+def filter_non_latin1(text):
+    return ''.join(c for c in text if 0 < ord(c) < 256)
 
 # Custom CSS to inject for setting the background color to a very light orange
 def set_light_orange_background():
