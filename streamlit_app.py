@@ -114,14 +114,29 @@ temp_language = st.selectbox(label="Choose your language / Choisissez votre lang
 
 confirm_button = st.button(label="Confirm / Confirmer")
 
+# Language Selection with the button to confirm selection
+if 'selected_language' not in st.session_state:
+    st.session_state.selected_language = "Français"  # Default language
+
+temp_language = st.selectbox(label="Choose your language / Choisissez votre langue", options=["English", "Français"], index=["English", "Français"].index(st.session_state.selected_language))
+
+confirm_button = st.button(label="Confirm / Confirmer")
+
 if confirm_button:
     st.session_state.selected_language = temp_language
-    # Reset messages to show the initial message in selected language
-    initial_message = "Ask me a question about the Art of Sale book." if st.session_state.selected_language == "English" else "Posez moi vos questions sur le livre Manuel de Formation à la vente."
-    st.session_state.messages = [{
-        "role": "assistant",
-        "content": initial_message
-    }]
+    # Reset messages and generate greeting using LLM
+    st.session_state.messages = []  # Clear previous messages
+
+    # Construct prompt for LLM to generate greeting
+    llm_prompt = f"""
+    You are a chatbot and a trainer on the book "Manuel de Formation a la vente" (The Art of Sale). 
+    You speak English and French. Greet the user and briefly introduce yourself and your capabilities.
+    Make sure to reply in the selected language: {st.session_state.selected_language}
+    """
+
+    with st.spinner("Generating greeting..."):
+        response = st.session_state.chat_engine.chat(message=llm_prompt)
+        st.session_state.messages.append({"role": "assistant", "content": response.response})
     
 title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
 st.title(title_text)
