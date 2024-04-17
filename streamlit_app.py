@@ -3,7 +3,7 @@
 import unicodedata
 import os
 import base64
-import pdfkit
+import weasyprint
 import streamlit as st
 #load_dotenv()
 from pinecone import Pinecone
@@ -190,5 +190,5 @@ chat_html = st.components.v1.html(
 )
 
 if st.button("Download Chat as PDF"):
-    pdfkit.from_string(chat_html, "chat_history.pdf")
+    HTML(string=chat_html).write_pdf("chat_history.pdf")
     st.success("Chat history saved as 'chat_history.pdf'")
