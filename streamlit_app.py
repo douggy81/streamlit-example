@@ -101,6 +101,9 @@ def set_light_orange_background():
 # Set the background color to a very light orange
 set_light_orange_background()
 
+    
+title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
+st.title(title_text)
 
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
@@ -129,14 +132,13 @@ if confirm_button:
     You are a chatbot and a trainer on the book "Manuel de Formation a la vente" (The Art of Sale). 
     You speak English and French. Greet the user and briefly introduce yourself and your capabilities.
     Make sure to reply in the selected language: {st.session_state.selected_language}
+    Also, ask for specific details because you are here to help the user on their specific case.
+    For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation.
     """
 
     with st.spinner("Generating greeting..."):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
         st.session_state.messages.append({"role": "assistant", "content": response.response})
-    
-title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
-st.title(title_text)
 
 # Chat interface
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
