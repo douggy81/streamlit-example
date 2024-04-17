@@ -50,7 +50,7 @@ def get_index() -> VectorStoreIndex:
     )
     # PineCone Instance
     index_name = "artofsaletestalpha"
-    pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.gcp-starter.pinecone.io")
+    pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io")
 
     vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
 
