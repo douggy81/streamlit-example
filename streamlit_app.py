@@ -173,14 +173,14 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             }
             st.session_state.messages.append(message)
             
-chat_html = st.components.v1.html(
-    f"""
-    <div style="font-family: 'YourEmojiFont', sans-serif;">
-        {chat_content}  
-    </div>
-    """,
-    height=500,  # Adjust height as needed
-)
+    chat_html = st.components.v1.html(
+        f"""
+        <div style="font-family: 'YourEmojiFont', sans-serif;">
+            {chat_content}  
+        </div>
+        """,
+        height=500,  # Adjust height as needed
+    )
 
 if st.button("Download Chat as PDF"):
     pdfkit.from_string(chat_html, "chat_history.pdf")
