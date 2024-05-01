@@ -134,8 +134,8 @@ if confirm_button:
     Also, ask for specific details because you are here to help the user on their specific case.
     For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation.
     """
-
-    with st.spinner("Generating greeting..."):
+    spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
+    with st.spinner(spinner_text):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
         st.session_state.messages.append({"role": "assistant", "content": response.response})
 
