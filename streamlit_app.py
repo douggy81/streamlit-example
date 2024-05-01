@@ -6,7 +6,7 @@ from llama_index.core import VectorStoreIndex, Settings, ServiceContext
 from llama_index.llms.gemini import Gemini
 from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
-#Quick check for the connection with Gemini and check access to 1.5 Pro (still not there!)
+#Quick check for the connection with Gemini and check access to 1.5 Pro
 import google.generativeai as genai
 
 from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
@@ -133,6 +133,9 @@ if confirm_button:
     Make sure to reply in the selected language: {st.session_state.selected_language}
     Also, ask for specific details because you are here to help the user on their specific case.
     For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation.
+    The other important fact is that you need to ask for the password which you know and is taxi.
+    Unless the user enters it, you won't be able to continue so keep asking for that password until the user enters it, then you can continue.
+    Thanks and have fun training a world of eager learners on how to sale and grow their business! 
     """
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
