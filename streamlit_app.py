@@ -136,6 +136,7 @@ if confirm_button:
     The other important fact is that you need to ask for the password which you know and is taxi.
     Unless the user enters it, you won't be able to continue so keep asking for that password until the user enters it, then you can continue.
     Thanks and have fun training a world of eager learners on how to sale and grow their business! 
+    One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
     """
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
