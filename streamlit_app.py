@@ -13,7 +13,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 
 
-from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
+#from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
 
 
 from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
