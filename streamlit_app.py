@@ -14,8 +14,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 
 
 from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
-#Quick check for the connection with Gemini and check access to 1.5 Pro
-#import google.generativeai as genai
+
 
 from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
 
@@ -51,7 +50,6 @@ print("***Manuel de Formation à la vente***")
 Settings.llm = OpenAI(model_name="gpt-3.5-turbo", api_key=os.environ.get("OPENAI_API_KEY"))
 Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=os.environ.get("OPENAI_API_KEY"))
 
-
 #To monitor under the hood behavior
 llama_debug=LlamaDebugHandler(print_trace_on_end=True)
 callback_manager=CallbackManager(handlers=[llama_debug])
@@ -63,10 +61,6 @@ def get_index() -> VectorStoreIndex:
     pc = Pinecone(
     api_key=os.environ.get("PINECONE_API_KEY")
     )
-    #Gemini
-    # PineCone Instance
-    #index_name = "artofsaletestalpha"
-    #pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io")
 
     #OpenAI
     # PineCone Instance
@@ -89,7 +83,7 @@ def get_index() -> VectorStoreIndex:
 index=get_index()
 
 if "chat_engine" not in  st.session_state.keys():
-    postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
+    #postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
 
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="context",
