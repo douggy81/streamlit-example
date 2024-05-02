@@ -2,6 +2,5 @@ streamlit
 pinecone-client
 llama-index
 llama-index-vector-stores-pinecone
-llama-index-llms-gemini
-llama-index-embeddings-gemini
-google.ai.generativelanguage
+llama-index-llms-openai
+llama-index-embeddings-openai
