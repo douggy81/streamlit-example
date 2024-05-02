@@ -3,41 +3,55 @@ import streamlit as st
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
-from llama_index.llms.gemini import Gemini
-from llama_index.embeddings.gemini import GeminiEmbedding
+
+#Gemini
+#from llama_index.llms.gemini import Gemini
+#from llama_index.embeddings.gemini import GeminiEmbedding
+
+#OpenAI
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+
+
 from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
 #Quick check for the connection with Gemini and check access to 1.5 Pro
-import google.generativeai as genai
+#import google.generativeai as genai
 
 from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
 
-from google.ai.generativelanguage import (
-    GenerateAnswerRequest,
-    HarmCategory,
-    SafetySetting,
-)
+# from google.ai.generativelanguage import (
+#     GenerateAnswerRequest,
+#     HarmCategory,
+#     SafetySetting,
+# )
 
-# Safety config - Adjusted for less restrictive harassment threshold
-safety_config = [
-    SafetySetting(
-        category=HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold=SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-    SafetySetting(
-        category=HarmCategory.HARM_CATEGORY_VIOLENCE,
-        threshold=SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-    SafetySetting(  # Adjusted setting for harassment
-        category=HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold=SafetySetting.HarmBlockThreshold.BLOCK_ONLY_HIGH,  # Only block high probability harassment
-    ),
-]
+# # Safety config - Adjusted for less restrictive harassment threshold
+# safety_config = [
+#     SafetySetting(
+#         category=HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+#         threshold=SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+#     ),
+#     SafetySetting(
+#         category=HarmCategory.HARM_CATEGORY_VIOLENCE,
+#         threshold=SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+#     ),
+#     SafetySetting(  # Adjusted setting for harassment
+#         category=HarmCategory.HARM_CATEGORY_HARASSMENT,
+#         threshold=SafetySetting.HarmBlockThreshold.BLOCK_ONLY_HIGH,  # Only block high probability harassment
+#     ),
+# ]
+
 
 print("***Manuel de Formation à la vente***")
 
 #Settings.llm = Gemini(model_name="models/gemini-1.5-pro-latest", api_key=os.environ.get("GOOGLE_API_KEY"))
-Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
-Settings.embed_model = GeminiEmbedding(model_name="models/embedding-001", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
+#Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
+#Settings.embed_model = GeminiEmbedding(model_name="models/embedding-001", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
+
+Settings.llm = OpenAI(model_name="gpt-3.5-turbo", api_key=os.environ.get("OPENAI_API_KEY"))
+Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=os.environ.get("OPENAI_API_KEY"))
+
+
 #To monitor under the hood behavior
 llama_debug=LlamaDebugHandler(print_trace_on_end=True)
 callback_manager=CallbackManager(handlers=[llama_debug])
@@ -49,9 +63,16 @@ def get_index() -> VectorStoreIndex:
     pc = Pinecone(
     api_key=os.environ.get("PINECONE_API_KEY")
     )
+    #Gemini
     # PineCone Instance
-    index_name = "artofsaletestalpha"
-    pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io")
+    #index_name = "artofsaletestalpha"
+    #pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io")
+
+    #OpenAI
+    # PineCone Instance
+    index_name = "artofsaletegpt"
+    pinecone_index = pc.Index(index_name=index_name, host="https://artofsalegpt-udkb0ne.svc.aped-4627-b74a.pinecone.io")
+
 
     vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
 
