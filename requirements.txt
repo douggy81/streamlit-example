@@ -4,3 +4,4 @@ llama-index
 llama-index-vector-stores-pinecone
 llama-index-llms-openai
 llama-index-embeddings-openai
+openai
