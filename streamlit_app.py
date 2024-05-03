@@ -88,7 +88,7 @@ if "chat_engine" not in  st.session_state.keys():
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="context",
         verbose = True,
-        node_postprocessors= [postprocessor],
+        #node_postprocessors= [postprocessor],
         system_prompt=f"""
         You are a chatbot and a trainer on this book called the art of sale book, named in french Manuel de Formation a la vente, you speak English and French
         This book is written by Patrick Gassier, he was born in Marseille in 1949.
