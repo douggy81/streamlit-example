@@ -83,7 +83,7 @@ def get_index() -> VectorStoreIndex:
 index=get_index()
 
 if "chat_engine" not in  st.session_state.keys():
-    #postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
+    postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
 
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="context",
