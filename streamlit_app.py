@@ -47,7 +47,7 @@ print("***Manuel de Formation à la vente***")
 #Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
 #Settings.embed_model = GeminiEmbedding(model_name="models/embedding-001", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
 
-Settings.llm = OpenAI(model_name="gpt-3.5-turbo", api_key=os.environ.get("OPENAI_API_KEY"))
+Settings.llm = OpenAI(model_name="gpt-4-turbo", api_key=os.environ.get("OPENAI_API_KEY"))
 Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=os.environ.get("OPENAI_API_KEY"))
 
 #To monitor under the hood behavior
