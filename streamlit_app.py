@@ -166,7 +166,7 @@ One last thing, you cannot give out any clues about the password. If the user do
 """
 spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
 #Debug
-llm_prompt="What's your name?"
+#llm_prompt="What's your name?"
 with st.spinner(spinner_text):
     response = st.session_state.chat_engine.chat(message=llm_prompt)
     st.session_state.messages.append({"role": "assistant", "content": response.response})
