@@ -157,20 +157,16 @@ french_button = st.button(label="Français")
 
 if english_button:
     st.session_state.selected_language = "English"
-    # Reset messages and generate greeting using LLM
-    st.session_state.messages = []  # Clear previous messages
-    
-if french_button:
+    st.session_state.messages = []
+elif french_button:
     st.session_state.selected_language = "Français"
-    # Reset messages and generate greeting using LLM
-    st.session_state.messages = []  # Clear previous messages
+    st.session_state.messages = []
+else:  # Handle the case where no button is pressed
+    st.session_state.selected_language = "Français" # Default language
 
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
     st.session_state.messages = []
-    # Language Selection with the button to confirm selection
-    if 'selected_language' not in st.session_state:
-        st.session_state.selected_language = "Français"  # Default language
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
         # Generate initial greeting
