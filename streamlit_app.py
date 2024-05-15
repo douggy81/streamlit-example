@@ -165,7 +165,7 @@ else:  # Handle the case where no button is pressed
     st.session_state.selected_language = "Français" # Default language
 
 # Ensure 'messages' exists in session state upon script execution
-if "messages" not in st.session_state:
+if "messages" not in st.session_state or english_button or french_button:
     st.session_state.messages = []
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
