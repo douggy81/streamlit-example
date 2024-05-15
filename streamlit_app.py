@@ -47,7 +47,7 @@ print("***Manuel de Formation à la vente***")
 #Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
 #Settings.embed_model = GeminiEmbedding(model_name="models/embedding-001", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
 
-Settings.llm = OpenAI(model_name="gpt-4-turbo", api_key=os.environ.get("OPENAI_API_KEY"))
+Settings.llm = OpenAI(model_name="gpt-4o", api_key=os.environ.get("OPENAI_API_KEY"))
 Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=os.environ.get("OPENAI_API_KEY"))
 
 #To monitor under the hood behavior
@@ -145,13 +145,18 @@ temp_language = st.selectbox(
     key="language_select"  # Add a unique key here
 )
 
-confirm_button = st.button(label="Confirm / Confirmer")
+english_button = st.button(label="English")
+french_button = st.button(label="Français")
 
-if confirm_button:
-    st.session_state.selected_language = temp_language
+if english_button:
+    st.session_state.selected_language = "English"
     # Reset messages and generate greeting using LLM
     st.session_state.messages = []  # Clear previous messages
-
+    
+if french_button:
+    st.session_state.selected_language = "Français"
+    # Reset messages and generate greeting using LLM
+    st.session_state.messages = []  # Clear previous messages
     # Construct prompt for LLM to generate greeting
     llm_prompt = f"""
     You are a chatbot and a trainer on the book "Manuel de Formation a la vente" (The Art of Sale). 
