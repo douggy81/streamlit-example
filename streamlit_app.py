@@ -134,12 +134,13 @@ if "messages" not in st.session_state:
 # Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "Français"  # Default language
+    
+english_button = st.button(label="English")
+french_button = st.button(label="Français")
 
 title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
 st.title(title_text)
 
-english_button = st.button(label="English")
-french_button = st.button(label="Français")
 
 if english_button:
     st.session_state.selected_language = "English"
