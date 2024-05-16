@@ -211,13 +211,19 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
         spinner_text = "Processing..." if st.session_state.selected_language == "English" else "En cours de traitement..."
         with st.spinner(spinner_text):
             response = st.session_state.chat_engine.chat(message=prompt_with_language_notice)
-            st.write(response.response)
-
-            #nodes = [ node for node in response.source_nodes]
-            #for col, node, i in zip(st.columns(len(nodes)), nodes, range(len(nodes))):
-            #    with col:
-            #        st.header(f"Source Node {i+1}: score= {node.score}")
-            #        st.write(node.text)
+            raw_response=response.response
+            # --- Output Convention Handling ---
+            if "__TASK__" in raw_response:
+                st.markdown("## Checklist")  # A nice heading for the checklist
+                tasks = raw_response.split("__TASK__")[1].strip().split('\n') 
+                for task in tasks:
+                    st.checkbox(task.strip())
+            elif "__TABLE__" in raw_response:
+                # ... (Logic for extracting table data and using st.table)
+            elif "__GRAPH__" in raw_response:
+                # ... (Logic for extracting graph data and using st.pyplot or plotly)
+            else:
+                st.write(raw_response)  # Default output if no convention is found
             
             message = {
                 "role" : "assistant",
