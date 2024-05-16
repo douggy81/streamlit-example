@@ -214,16 +214,19 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             raw_response=response.response
             # --- Output Convention Handling ---
             if "__TASK__" in raw_response:
-                st.markdown("## Checklist")  # A nice heading for the checklist
+                st.markdown("## Checklist") 
                 tasks = raw_response.split("__TASK__")[1].strip().split('\n') 
                 for task in tasks:
                     st.checkbox(task.strip())
             elif "__TABLE__" in raw_response:
-                # ... (Logic for extracting table data and using st.table)
+                # ... (Logic for extracting table data and using st.table) 
             elif "__GRAPH__" in raw_response:
-                # ... (Logic for extracting graph data and using st.pyplot or plotly)
+                # ***You need to add your graph logic here!***
+                # For example:
+                st.markdown("## Graph Placeholder")
+                st.write("Add your code to extract graph data and use st.pyplot or plotly") 
             else:
-                st.write(raw_response)  # Default output if no convention is found
+                st.write(raw_response)  # Default output
             
             message = {
                 "role" : "assistant",
