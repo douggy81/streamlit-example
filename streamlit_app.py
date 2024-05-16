@@ -58,15 +58,13 @@ def get_index() -> VectorStoreIndex:
 
     return VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
-    #query = "What is the name of author of this book?"
-    #query_engine = index.as_query_engine()
-
-    # Apply safety settings to the query engine
-    #query_engine.safety_config = safety_config
-
-    #response = query_engine.query(query)
-    #print(response)
 index=get_index()
+
+# --- Dynamic Title ---
+
+def update_title():
+    title_text = "Chat with the Gemini, your personal trainer in sales using a methodology developed by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
+    st.title(title_text)
 
 if "chat_engine" not in  st.session_state.keys():
     postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
@@ -90,7 +88,7 @@ if "chat_engine" not in  st.session_state.keys():
         Again, you are a chatbot and trainer, you can generate quizzes as well but mostly you are here to help the user reach their goal to grow their business, feel that they are learning from you great things.
         Don't hesitate to use the best of your knowledge and practice as well as giving out references in the correct language.
         Also, tell the user that if they need a print out of the output, just select Print from their web browser directly and format your answer in a nice and printable format.
-        Give them an example of a response that can be printed such as a checklist for a premeeting with a customer that can be printed out and taken on the road.
+        Give them an example of a response that can be printed such as a checklist for a pre-meeting with a customer that can be printed out and taken on the road.
         """
         )
 
@@ -121,8 +119,7 @@ if "messages" not in st.session_state:
 if 'selected_language' not in st.session_state:
     st.session_state.selected_language = "Français"  # Default language
 
-title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
-st.title(title_text)
+update_title()  # Set initial title
 
 temp_language = st.selectbox(
     label="Choose your language / Choisissez votre langue", 
@@ -150,13 +147,12 @@ if confirm_button:
     Thanks and have fun training a world of eager learners on how to sale and grow their business! 
     One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
     """
-    title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
-    st.title(title_text)
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
         st.session_state.messages.append({"role": "assistant", "content": response.response})
-
+    update_title()  # Update the title after language change
+    
 # Chat interface
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
 prompt = st.chat_input(chat_text) # Capture user input every time the script reruns
