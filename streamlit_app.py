@@ -228,8 +228,8 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             else:
                 st.write(raw_response)  # Default output
             
-            message = {
-                "role" : "assistant",
-                "content" :  response.response
-            }
+                message = {
+                    "role" : "assistant",
+                    "content" :  response.response
+                }
             st.session_state.messages.append(message)
