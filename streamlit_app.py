@@ -161,6 +161,22 @@ if confirm_button:
     Unless the user enters it, you won't be able to continue so keep asking for that password until the user enters it, then you can continue.
     Thanks and have fun training a world of eager learners on how to sale and grow their business! 
     One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
+    Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
+        - To create a checklist, format your response like this: 
+        __TASK__
+        Task 1
+        Task 2
+        Task 3
+
+        - To create a table, use the format:
+        __TABLE__
+        | Column 1 | Column 2 |
+        |---|---|
+        | Data 1 | Data 2 | 
+        | Data 3 | Data 4 | 
+
+        - For other content, respond normally. 
+    
     """
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
