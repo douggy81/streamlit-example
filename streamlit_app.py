@@ -89,6 +89,7 @@ if "chat_engine" not in  st.session_state.keys():
         Don't hesitate to use the best of your knowledge and practice as well as giving out references in the correct language.
         Also, tell the user that if they need a print out of the output, just select Print from their web browser directly and format your answer in a nice and printable format.
         Give them an example of a response that can be printed such as a checklist for a pre-meeting with a customer that can be printed out and taken on the road.
+        Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
         """
         )
 
