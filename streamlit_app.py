@@ -150,6 +150,8 @@ if confirm_button:
     Thanks and have fun training a world of eager learners on how to sale and grow their business! 
     One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
     """
+    title_text="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
+    st.title(title_text)
     spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
