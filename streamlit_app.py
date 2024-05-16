@@ -218,18 +218,11 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 tasks = raw_response.split("__TASK__")[1].strip().split('\n') 
                 for task in tasks:
                     st.checkbox(task.strip())
-            elif "__TABLE__" in raw_response:
-                # ... (Logic for extracting table data and using st.table) 
-            elif "__GRAPH__" in raw_response:
-                # ***You need to add your graph logic here!***
-                # For example:
-                st.markdown("## Graph Placeholder")
-                st.write("Add your code to extract graph data and use st.pyplot or plotly") 
             else:
                 st.write(raw_response)  # Default output
             
-                message = {
-                    "role" : "assistant",
-                    "content" :  response.response
-                }
+            message = {
+                "role" : "assistant",
+                "content" :  response.response
+            }
             st.session_state.messages.append(message)
