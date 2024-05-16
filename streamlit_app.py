@@ -216,8 +216,8 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
             if "__TASK__" in raw_response:
                 st.markdown("## Checklist") 
                 tasks = raw_response.split("__TASK__")[1].strip().split('\n') 
-                for task in tasks:
-                    st.checkbox(task.strip())
+                for i, task in enumerate(tasks): # Use enumerate to get a unique index
+                    st.checkbox(task.strip(), key=f"task_{i}")  # Assign a unique key
             else:
                 st.write(raw_response)  # Default output
             
