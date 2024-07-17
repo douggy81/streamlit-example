@@ -64,6 +64,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Gestion de l'état de la session
+
+# Initialisation de la langue
+if 'selected_language' not in st.session_state:
+    st.session_state.selected_language = "Français"
+
+# Initialisation des messages
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
 
