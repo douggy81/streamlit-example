@@ -138,7 +138,6 @@ if confirm_button:
     with st.spinner(spinner_text):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
         st.session_state.messages.append({"role": "assistant", "content": response.response})
-    update_title()
 
 # Interface de chat
 chat_text = "Your question..." if st.session_state.selected_language == "English" else "Votre question..."
