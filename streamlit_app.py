@@ -105,8 +105,8 @@ confirm_button = st.button(label="Confirm / Confirmer")
 
 if confirm_button:
     st.session_state.selected_language = temp_language
-    st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
-    # Pas besoin d'appeler update_title() ici
+    st.session_state.messages = [] 
+    #st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
 
 # Interface de chat
 chat_text = "Your question..." if st.session_state.selected_language == "English" else "Votre question..."
