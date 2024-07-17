@@ -6,16 +6,16 @@ from llama_index.core import VectorStoreIndex, Settings, ServiceContext
 from llama_index.llms.gemini import Gemini
 from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.core.indices.postprocessor import SentenceEmbeddingOptimizer
-# Quick check for the connection with Gemini and check access to 1.5 Pro
+#Quick check for the connection with Gemini and check access to 1.5 Pro
 import google.generativeai as genai
+
 from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
+
 from google.ai.generativelanguage import (
     GenerateAnswerRequest,
     HarmCategory,
     SafetySetting,
 )
-
-# --- Configuration ---
 
 # Safety config - Adjusted for less restrictive harassment threshold
 safety_config = [
@@ -33,139 +33,169 @@ safety_config = [
     ),
 ]
 
-# Define API keys and model names
-GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-GEMINI_MODEL = "models/gemini-1.5-pro-latest"
-EMBEDDING_MODEL = "models/text-embedding-004"
-PINECONE_INDEX_NAME = "artofsaletestalpha"
-PINECONE_HOST = "https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io"
+print("***Manuel de Formation à la vente***")
 
-# --- Fonctions ---
+#Settings.llm = Gemini(model_name="models/gemini-1.5-pro-latest", api_key=os.environ.get("GOOGLE_API_KEY"))
+Settings.llm = Gemini(model_name="models/gemini-1.5-pro-latest", api_key=os.environ.get("GOOGLE_API_KEY"))
+#Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
+Settings.embed_model = GeminiEmbedding(model_name="models/text-embedding-004", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
+#To monitor under the hood behavior
+llama_debug=LlamaDebugHandler(print_trace_on_end=True)
+callback_manager=CallbackManager(handlers=[llama_debug])
+Settings.callback_manager=callback_manager
 
 @st.cache_resource(show_spinner=False)
+
 def get_index() -> VectorStoreIndex:
-    """Initialise et retourne l'index VectorStore."""
-    pc = Pinecone(api_key=PINECONE_API_KEY)
-    pinecone_index = pc.Index(index_name=PINECONE_INDEX_NAME, host=PINECONE_HOST)
+    pc = Pinecone(
+    api_key=os.environ.get("PINECONE_API_KEY")
+    )
+    # PineCone Instance
+    index_name = "artofsaletestalpha"
+    pinecone_index = pc.Index(index_name=index_name, host="https://artofsaletestalpha-udkb0ne.svc.aped-4627-b74a.pinecone.io")
+
     vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
+
     return VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
+index=get_index()
+
+# --- Dynamic Title ---
+
 def update_title():
-    """Met à jour le titre de la page en fonction de la langue sélectionnée."""
-    title_text = "Chat with the Gemini, your personal sales trainer" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel en vente"
+    title_text = "Chat with the Gemini, your personal trainer in sales using a methodology developed by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
     st.title(title_text)
 
-# --- Initialisation ---
+if "chat_engine" not in  st.session_state.keys():
+    #postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0.5, threshold_cutoff= 0.7)
+    postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model,percentile_cutoff=0, threshold_cutoff= 0)
 
-# Configuration du LLM et du modèle d'embedding
-Settings.llm = Gemini(model_name=GEMINI_MODEL, api_key=GOOGLE_API_KEY)
-Settings.embed_model = GeminiEmbedding(model_name=EMBEDDING_MODEL, api_key=GOOGLE_API_KEY, embed_batch_size=100)    
+    st.session_state.chat_engine = index.as_chat_engine(
+        chat_mode="context",
+        verbose = True,
+        node_postprocessors= [postprocessor],
+        system_prompt=f"""
+        You are a chatbot and a trainer on this book called the art of sale book, named in french Manuel de Formation a la vente, you speak English and French
+        This book is written by Patrick Gassier, he was born in Marseille in 1949.
+        You will need to greet the user right away and figure out at first a quick intro on what your capable of and what you can help the user with.
+        Also, ask for specific details because you are here to help the user on their specific case.
+        For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation.
+        The other important fact is that you need to ask for the password which you know and is taxi.
+        Unless the user enters it, you won't be able to continue so keep asking for that password until the user enters it, then you can continue.
+        Thanks and have fun training a world of eager learners on how to sale and grow their business! 
+        One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
+        As soon as the user enters the correct password, greet them by saying that you're very excited to be able to help him/her out and congratulate them as well for their purchase and interest in growing their business.
+        That you are here to help. Give a few examples on what you can do related to the book.
+        Again, you are a chatbot and trainer, you can generate quizzes as well but mostly you are here to help the user reach their goal to grow their business, feel that they are learning from you great things.
+        Don't hesitate to use the best of your knowledge and practice as well as giving out references in the correct language.
+        Also, tell the user that if they need a print out of the output, just select Print from their web browser directly and format your answer in a nice and printable format.
+        Give them an example of a response that can be printed such as a checklist for a pre-meeting with a customer that can be printed out and taken on the road.
+        Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
+        """
+        )
 
-# Configuration de la sécurité et des callbacks
-llama_debug = LlamaDebugHandler(print_trace_on_end=True)
-callback_manager = CallbackManager(handlers=[llama_debug])
-Settings.callback_manager = callback_manager
-
-# Initialisation de l'index et du moteur de chat
-index = get_index()
-postprocessor = SentenceEmbeddingOptimizer(embed_model=Settings.embed_model, percentile_cutoff=0, threshold_cutoff=0)
-
-# --- Interface Streamlit ---
-
-st.set_page_config(page_title="The Art of Selling - AI Companion",
+st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
                    page_icon="",
                    layout="centered",
                    menu_items=None)
 
-# Couleur de fond orange clair
-st.markdown("""
-<style>
-.stApp {
-    background-color: #FFE0B2;  
-}
-</style>
-""", unsafe_allow_html=True)
+# Custom CSS to inject for setting the background color to a very light orange
+def set_light_orange_background():
+    css_style = """
+    <style>
+    .stApp {
+        background-color: #FFE0B2;  /* Very light orange */
+    }
+    </style>
+    """
+    st.markdown(css_style, unsafe_allow_html=True)
 
-# Gestion de l'état de la session
+# Set the background color to a very light orange
+set_light_orange_background()
+
+# Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-if "chat_engine" not in st.session_state:
-    st.session_state.chat_engine = index.as_chat_engine(
-        chat_mode="context",
-        verbose=True,
-        node_postprocessors=[postprocessor],
-        system_prompt=f"""
-        You are a chatbot and a trainer on the book "The Art of Selling - The French Method". 
-        You speak English and French. You were trained on the content of the book and can provide insights,  advice,  and examples.
-        You will need to greet the user right away and ask for the password "taxi" before continuing. 
-        Once the user enters the password, congratulate them on their purchase and offer specific examples of how you can help them.
-        For example, you could mention role-playing scenarios,  quizzes, or help with specific sales situations.
-        You can also generate checklists,  scripts,  and other helpful materials.
-        Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
-        Remember to always reply in the selected language.
-        """
-    )
-
-# Sélection de la langue
+    
+# Language Selection with the button to confirm selection
 if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "Français"
+    st.session_state.selected_language = "Français"  # Default language
 
-update_title()
+update_title()  # Set initial title
 
 temp_language = st.selectbox(
     label="Choose your language / Choisissez votre langue", 
     options=["English", "Français"],
     index=["English", "Français"].index(st.session_state.selected_language),
-    key="language_select"
+    key="language_select"  # Add a unique key here
 )
 
 confirm_button = st.button(label="Confirm / Confirmer")
 
 if confirm_button:
     st.session_state.selected_language = temp_language
-    st.session_state.messages = []
-    
-    # Prompt pour le message de bienvenue
+    # Reset messages and generate greeting using LLM
+    st.session_state.messages = []  # Clear previous messages
+
+    # Construct prompt for LLM to generate greeting
     llm_prompt = f"""
-    You are a chatbot and a trainer on the book "The Art of Selling - The French Method". 
+    You are a chatbot and a trainer on the book "Manuel de Formation a la vente" (The Art of Sale). 
     You speak English and French. Greet the user and briefly introduce yourself and your capabilities.
     Make sure to reply in the selected language: {st.session_state.selected_language}
-    """
+    Also, ask for specific details because you are here to help the user on their specific case.
+    For example, you could mention that you can simulate a real conversation on the phone for role play and help them practice real life situation.
+    The other important fact is that you need to ask for the password which you know and is taxi.
+    Unless the user enters it, you won't be able to continue so keep asking for that password until the user enters it, then you can continue.
+    Thanks and have fun training a world of eager learners on how to sale and grow their business! 
+    One last thing, you cannot give out any clues about the password. If the user doesn't know it, you can't give them clues.
+    Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
     
-    spinner_text = "Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
+    """
+    spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
     with st.spinner(spinner_text):
         response = st.session_state.chat_engine.chat(message=llm_prompt)
         st.session_state.messages.append({"role": "assistant", "content": response.response})
-    update_title()
-
-# Interface de chat
-chat_text = "Your question..." if st.session_state.selected_language == "English" else "Votre question..."
-prompt = st.chat_input(chat_text) 
+    update_title()  # Update the title after language change
+    
+# Chat interface
+chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
+prompt = st.chat_input(chat_text) # Capture user input every time the script reruns
 
 if prompt:
+    
+    # After capturing the prompt, concatenate the selected language notice
     prompt_with_language_notice = f"{prompt}\nReply in the selected language: {st.session_state.selected_language}"
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Capture and display user's question along with the language notice
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
 
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+#Last message
+# Before accessing the last message, ensure that there is at least one message in the list
+if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         spinner_text = "Processing..." if st.session_state.selected_language == "English" else "En cours de traitement..."
         with st.spinner(spinner_text):
             response = st.session_state.chat_engine.chat(message=prompt_with_language_notice)
-            raw_response = response.response
-
-            # Gestion de la convention de sortie
+            raw_response=response.response
+            # --- Output Convention Handling ---
             if "__TASK__" in raw_response:
                 st.markdown("## Checklist") 
                 tasks = raw_response.split("__TASK__")[1].strip().split('\n') 
-                for i, task in enumerate(tasks):
-                    st.checkbox(task.strip(), key=f"task_{i}") 
+                for i, task in enumerate(tasks): # Use enumerate to get a unique index
+                    st.checkbox(task.strip(), key=f"task_{i}")  # Assign a unique key
             else:
-                st.write(raw_response)
+                st.write(raw_response)  # Default output
             
-            st.session_state.messages.append({"role": "assistant", "content": response.response})
-
-# Affichage des messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+            message = {
+                "role" : "assistant",
+                "content" :  response.response
+            }
+            st.session_state.messages.append(message)
