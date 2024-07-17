@@ -63,7 +63,8 @@ index=get_index()
 # --- Dynamic Title ---
 
 def update_title():
-    title_text = "Chat with the Gemini, your personal trainer in sales using a methodology developed by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
+    """Met à jour le titre de la page en fonction de la langue sélectionnée."""
+    title_text = "Chat with the Gemini, your personal sales trainer" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel en vente"
     st.title(title_text)
 
 if "chat_engine" not in  st.session_state.keys():
@@ -94,24 +95,21 @@ if "chat_engine" not in  st.session_state.keys():
         """
         )
 
-st.set_page_config(page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
+# --- Interface Streamlit ---
+
+st.set_page_config(page_title="The Art of Selling - AI Companion",
                    page_icon="",
                    layout="centered",
                    menu_items=None)
 
-# Custom CSS to inject for setting the background color to a very light orange
-def set_light_orange_background():
-    css_style = """
-    <style>
-    .stApp {
-        background-color: #FFE0B2;  /* Very light orange */
-    }
-    </style>
-    """
-    st.markdown(css_style, unsafe_allow_html=True)
-
-# Set the background color to a very light orange
-set_light_orange_background()
+# Couleur de fond orange clair
+st.markdown("""
+<style>
+.stApp {
+    background-color: #FFE0B2;  
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Ensure 'messages' exists in session state upon script execution
 if "messages" not in st.session_state:
