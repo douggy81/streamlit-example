@@ -133,7 +133,7 @@ if prompt:
             
             st.session_state.messages.append({"role": "assistant", "content": response.response})
 
-# Affichage des messages
-for message in st.session_state.messages-1:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+## Affichage des messages
+#for message in st.session_state.messages:
+#    with st.chat_message(message["role"]):
+#        st.write(message["content"])
