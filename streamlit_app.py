@@ -90,12 +90,10 @@ if "chat_engine" not in st.session_state:
         """
     )
 
-# Sélection de la langue
-if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "Français"
-
+# --- Affichage du titre une seule fois ---
 update_title()
 
+# Sélection de la langue
 temp_language = st.selectbox(
     label="Choose your language / Choisissez votre langue", 
     options=["English", "Français"],
@@ -108,7 +106,7 @@ confirm_button = st.button(label="Confirm / Confirmer")
 if confirm_button:
     st.session_state.selected_language = temp_language
     st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
-    update_title()
+    # Pas besoin d'appeler update_title() ici
 
 # Interface de chat
 chat_text = "Your question..." if st.session_state.selected_language == "English" else "Votre question..."
