@@ -105,8 +105,8 @@ confirm_button = st.button(label="Confirm / Confirmer")
 
 if confirm_button:
     st.session_state.selected_language = temp_language
-    st.session_state.messages = [] 
-    #st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
+    #st.session_state.messages = [] 
+    st.session_state.messages = [{"role": "assistant", "content": generate_greeting()}]
 
 # Interface de chat
 chat_text = "Your question..." if st.session_state.selected_language == "English" else "Votre question..."
@@ -134,6 +134,6 @@ if prompt:
             st.session_state.messages.append({"role": "assistant", "content": response.response})
 
 # Affichage des messages
-for message in st.session_state.messages:
+for message in st.session_state.messages-1:
     with st.chat_message(message["role"]):
         st.write(message["content"])
