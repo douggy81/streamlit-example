@@ -176,6 +176,10 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
+# --- Affichage du lien vers le livre ---
+st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
+
+
 #Last message
 # Before accessing the last message, ensure that there is at least one message in the list
 if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
@@ -198,4 +202,3 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 "content" :  response.response
             }
             st.session_state.messages.append(message)
-st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
