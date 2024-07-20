@@ -44,6 +44,8 @@ llama_debug=LlamaDebugHandler(print_trace_on_end=True)
 callback_manager=CallbackManager(handlers=[llama_debug])
 Settings.callback_manager=callback_manager
 
+st.write(llama_debug)
+
 @st.cache_resource(show_spinner=False)
 
 def get_index() -> VectorStoreIndex:
