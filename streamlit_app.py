@@ -152,11 +152,11 @@ if confirm_button:
     Feel free to use emojis (like 👍 or 😀) in your responses to make them more engaging.
     
     """
-#    spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
-#    with st.spinner(spinner_text):
-#        response = st.session_state.chat_engine.chat(message=llm_prompt)
-#        st.session_state.messages.append({"role": "assistant", "content": response.response})
-#    update_title()  # Update the title after language change
+    spinner_text="Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."
+    with st.spinner(spinner_text):
+        response = st.session_state.chat_engine.chat(message=llm_prompt)
+        st.session_state.messages.append({"role": "assistant", "content": response.response})
+    update_title()  # Update the title after language change
     
 # Chat interface
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
