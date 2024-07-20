@@ -1,5 +1,15 @@
 import os
 import streamlit as st
+
+import vertexai
+
+from vertexai.generative_models import (
+    GenerationConfig,
+    GenerativeModel,
+    Tool,
+    grounding,
+)
+
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
