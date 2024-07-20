@@ -1,15 +1,6 @@
 import os
 import streamlit as st
 
-import vertexai
-
-from vertexai.generative_models import (
-    GenerationConfig,
-    GenerativeModel,
-    Tool,
-    grounding,
-)
-
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
@@ -26,28 +17,6 @@ from google.ai.generativelanguage import (
     HarmCategory,
     SafetySetting,
 )
-
-# TODO(developer): Update and un-comment below line
-project_id = "jezero-28a68"
-
-vertexai.init(project=project_id, location="us-central1")
-
-model = GenerativeModel("gemini-1.5-flash-001")
-
-# Use Google Search for grounding
-tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
-
-prompt = "When is the next total solar eclipse in US?"
-response = model.generate_content(
-    prompt,
-    tools=[tool],
-    generation_config=GenerationConfig(
-        temperature=0.0,
-    ),
-)
-
-print(response)
-
 
 # Safety config - Adjusted for less restrictive harassment threshold
 safety_config = [
