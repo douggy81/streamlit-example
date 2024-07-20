@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-
 from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex, Settings, ServiceContext
@@ -64,7 +63,7 @@ index=get_index()
 # --- Dynamic Title ---
 
 def update_title():
-    title_text = "Chat with the Gemini, your personal trainer in sales using a methodology developed by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel IA sur les méthodologies de vente créées par Patrick Gassier"
+    title_text = "Chat with the Gemini, your personal trainer in sales using a methodology developed by Patrick Gassier" if st.session_state.selected_language == "English" else "Conversation avec votre formateur personnel sur les méthodologies de vente créées par Patrick Gassier"
     st.title(title_text)
 
 if "chat_engine" not in  st.session_state.keys():
