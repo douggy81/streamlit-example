@@ -161,8 +161,7 @@ if confirm_button:
 # Chat interface
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
 prompt = st.chat_input(chat_text) # Capture user input every time the script reruns
-# --- Affichage du lien vers le livre ---
-st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
+
 if prompt:
     
     # After capturing the prompt, concatenate the selected language notice
@@ -180,7 +179,7 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Affichage du lien vers le livre ---
-#st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
+st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
 
 
 #Last message
