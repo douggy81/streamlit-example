@@ -7,3 +7,5 @@ llama-index-embeddings-gemini
 google.ai.generativelanguage
 python-docx
 reportlab
+markdown
+beautifulsoup4
