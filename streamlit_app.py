@@ -247,15 +247,18 @@ def create_pdf_document(formatted_text):
         formatted_line=""
         
         try: #This is the fix
-            for element in soup.body.contents:
-                 if element.name == 'p':
-                    for item in element.contents:
-                        if str(item).startswith('<strong>'):
-                            formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
-                        elif str(item).startswith('<em>'):
-                            formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
-                        else:
-                             formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
+            if soup.body:
+                for element in soup.body.contents:
+                     if element.name == 'p':
+                        for item in element.contents:
+                            if str(item).startswith('<strong>'):
+                                formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
+                            elif str(item).startswith('<em>'):
+                                formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
+                            else:
+                                 formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
+            else:
+                formatted_line=line # just add the line without formatting
         except AttributeError:
             formatted_line = line  # Use the original line if parsing fails
 
