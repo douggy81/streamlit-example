@@ -208,9 +208,9 @@ def create_word_document(formatted_text):
             p = document.add_paragraph()
             html = markdown.markdown(line)
             soup = BeautifulSoup(html, 'html.parser')
-            
+
             if soup.body:  # Check if body exists before accessing contents
-                try:
+                try:  # Correctly placed try...except block
                     if soup.body.contents:
                         for element in soup.body.contents:
                             if element.name == 'p':
@@ -228,7 +228,7 @@ def create_word_document(formatted_text):
             else:  # Add the original line if no body
                 p.add_run(line)
         else:
-            document.add_paragraph() # Add empty paragraph for spacing
+            document.add_paragraph()  # Add empty paragraph for spacing
 
     buffer = BytesIO()
     document.save(buffer)
