@@ -294,37 +294,37 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 st.error(f"An error occurred while processing the response: {e}")
 
 # --- Export Functionality ---
-if st.session_state.messages:
-        formatted_history = format_chat_history(st.session_state.messages)
-        
-        # Multilingual button labels
-        word_label_en = "Export to Word (.docx)"
-        word_label_fr = "Exporter au format Word (.docx)"
-        pdf_label_en = "Export to PDF (.pdf)"
-        pdf_label_fr = "Exporter au format PDF (.pdf)"
+# Multilingual button labels
+word_label_en = "Export to Word (.docx)"
+word_label_fr = "Exporter au format Word (.docx)"
+pdf_label_en = "Export to PDF (.pdf)"
+pdf_label_fr = "Exporter au format PDF (.pdf)"
 
-        if st.session_state.selected_language == "English":
-            word_label=word_label_en
-            pdf_label=pdf_label_en
-        else:
-            word_label = word_label_fr
-            pdf_label = pdf_label_fr
+if st.session_state.messages:
+    formatted_history = format_chat_history(st.session_state.messages)
+        
+    if st.session_state.selected_language == "English":
+      word_label=word_label_en
+      pdf_label=pdf_label_en
+    else:
+      word_label = word_label_fr
+      pdf_label = pdf_label_fr
             
 
-        # Word export
-        word_buffer = create_word_document(formatted_history)
-        st.download_button(
-            label=word_label,
-            data=word_buffer,
-            file_name="chat_history.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+    # Word export
+    word_buffer = create_word_document(formatted_history)
+    st.download_button(
+        label=word_label,
+        data=word_buffer,
+        file_name="chat_history.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
 
-        # PDF export
-        pdf_buffer = create_pdf_document(formatted_history)
-        st.download_button(
-            label=pdf_label,
-            data=pdf_buffer,
-            file_name="chat_history.pdf",
-            mime="application/pdf"
-        )
+    # PDF export
+    pdf_buffer = create_pdf_document(formatted_history)
+    st.download_button(
+        label=pdf_label,
+        data=pdf_buffer,
+        file_name="chat_history.pdf",
+        mime="application/pdf"
+    )
