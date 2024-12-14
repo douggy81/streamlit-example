@@ -309,7 +309,7 @@ else:
 
 if st.session_state.messages:
     formatted_history = format_chat_history(st.session_state.messages)
-    
+        
     # Word export
     word_buffer = create_word_document(formatted_history)
     st.download_button(
