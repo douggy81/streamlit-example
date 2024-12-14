@@ -5,3 +5,5 @@ llama-index-vector-stores-pinecone
 llama-index-llms-gemini
 llama-index-embeddings-gemini
 google.ai.generativelanguage
+python-docx
+reportlab
