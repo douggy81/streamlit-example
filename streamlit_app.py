@@ -304,6 +304,10 @@ word_label_fr = "Exporter au format Word (.docx)"
 pdf_label_en = "Export to PDF (.pdf)"
 pdf_label_fr = "Exporter au format PDF (.pdf)"
 
+# Initialize word_label and pdf_label before using them
+word_label = word_label_en # assign the english default
+pdf_label = pdf_label_en # assign the english default
+
 if st.session_state.selected_language == "English":
     word_label = word_label_en
     pdf_label = pdf_label_en
