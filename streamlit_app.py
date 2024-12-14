@@ -137,14 +137,6 @@ if "chat_engine" not in st.session_state:
         st.error("Could not initialize the chat engine due to Pinecone connection failure.")
 
 
-# --- Streamlit App Config ---
-st.set_page_config(
-    page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
-    page_icon="",
-    layout="centered",
-    menu_items=None
-)
-
 # --- Initialize messages list if not in session state ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
