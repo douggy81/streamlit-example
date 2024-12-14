@@ -179,7 +179,7 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Affichage du lien vers le livre ---
-st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
+st.markdown("📖 Pour obtenir un copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
 
 
 #Last message
