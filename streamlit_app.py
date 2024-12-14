@@ -204,28 +204,30 @@ def create_word_document(formatted_text):
     """Creates a Word document in memory from the formatted text."""
     document = Document()
     for line in formatted_text.split('\n\n'):
-        p = document.add_paragraph()
-        html = markdown.markdown(line)
-        soup = BeautifulSoup(html, 'html.parser')
-        try: # attempt to access soup.body and its contents inside a try/except
-            if soup.body: # check if soup.body exists   <- MOVED INSIDE TRY
-                if soup.body.contents: #Check if there are contents  <- MOVED INSIDE TRY
-                    for element in soup.body.contents:
-                        if element.name == 'p':
-                            for item in element.contents:
-                                if str(item).startswith('<strong>'):
-                                    p.add_run(item.text).bold = True
-                                elif str(item).startswith('<em>'):
-                                    p.add_run(item.text).italic = True
-                                else:
-                                    p.add_run(str(item))
-                else: # if soup.body does not contain anything, add the line
+        if line.strip(): # Check if the line has content after removing whitespace
+            p = document.add_paragraph()
+            html = markdown.markdown(line)
+            soup = BeautifulSoup(html, 'html.parser')
+            try:
+                if soup.body:
+                    if soup.body.contents:
+                        for element in soup.body.contents:
+                            if element.name == 'p':
+                                for item in element.contents:
+                                    if str(item).startswith('<strong>'):
+                                        p.add_run(item.text).bold = True
+                                    elif str(item).startswith('<em>'):
+                                        p.add_run(item.text).italic = True
+                                    else:
+                                        p.add_run(str(item))
+                    else:
+                        document.add_paragraph(line)
+                else:
                     document.add_paragraph(line)
-            else:  # if soup.body does not exist, add the line as normal paragraph
+            except AttributeError:
                 document.add_paragraph(line)
-
-        except AttributeError: # if soup.body or soup.body.contents does not exist, just add the line
-           document.add_paragraph(line)
+        else: # Handle empty lines
+            document.add_paragraph() # Add an empty paragraph for spacing
 
     buffer = BytesIO()
     document.save(buffer)
