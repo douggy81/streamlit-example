@@ -36,7 +36,7 @@ safety_config = [
 print("***Manuel de Formation à la vente***")
 
 #Settings.llm = Gemini(model_name="models/gemini-1.5-pro-latest", api_key=os.environ.get("GOOGLE_API_KEY"))
-Settings.llm = Gemini(model_name="models/gemini-2-flash-latest", api_key=os.environ.get("GOOGLE_API_KEY"))
+Settings.llm = Gemini(model_name="models/gemini-2.0-flash-exp", api_key=os.environ.get("GOOGLE_API_KEY"))
 #Settings.llm = Gemini(model_name="models/gemini-1.0-pro", api_key=os.environ.get("GOOGLE_API_KEY"))
 Settings.embed_model = GeminiEmbedding(model_name="models/text-embedding-004", api_key=os.environ.get("GOOGLE_API_KEY"), embed_batch_size=100)    
 #To monitor under the hood behavior
