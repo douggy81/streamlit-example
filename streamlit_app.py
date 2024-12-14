@@ -16,9 +16,17 @@ from google.ai.generativelanguage import (
 
 from docx import Document
 from docx.shared import Inches
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT
 from io import BytesIO
+import markdown
+from bs4 import BeautifulSoup
 
 # --- Streamlit App Config ---
 st.set_page_config(
@@ -195,7 +203,19 @@ def format_chat_history(messages):
 def create_word_document(formatted_text):
     """Creates a Word document in memory from the formatted text."""
     document = Document()
-    document.add_paragraph(formatted_text)
+    for line in formatted_text.split('\n\n'):
+        p=document.add_paragraph()
+        html = markdown.markdown(line)
+        soup = BeautifulSoup(html, 'html.parser')
+        for element in soup.body.contents:
+             if element.name == 'p':
+                for item in element.contents:
+                    if str(item).startswith('<strong>'):
+                        p.add_run(item.text).bold = True
+                    elif str(item).startswith('<em>'):
+                        p.add_run(item.text).italic = True
+                    else:
+                         p.add_run(str(item))
     
     buffer = BytesIO()
     document.save(buffer)
@@ -206,14 +226,38 @@ def create_pdf_document(formatted_text):
     """Creates a PDF document in memory from the formatted text."""
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    textobject = p.beginText()
-    textobject.setTextOrigin(20,750)
-    textobject.setFont("Helvetica", 12)
+    styles = getSampleStyleSheet()
+    normal_style = styles['Normal']
+    normal_style.fontName = 'Arial Unicode MS' # Use a font that has emoji support
 
-    for line in formatted_text.split('\n'):
-        textobject.textLine(line)
+    story = []
+    for line in formatted_text.split('\n\n'):
+        html = markdown.markdown(line)
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        formatted_line=""
+        for element in soup.body.contents:
+             if element.name == 'p':
+                for item in element.contents:
+                    if str(item).startswith('<strong>'):
+                        formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
+                    elif str(item).startswith('<em>'):
+                        formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
+                    else:
+                         formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
+
+        story.append(Paragraph(formatted_line, normal_style))
+        
     
-    p.drawText(textobject)
+    y=750 #starting Y
+    for item in story:
+        item.wrapOn(p, 400, 50)
+        if y < 50 : # add a page if necessary
+          p.showPage()
+          y=750
+        item.drawOn(p, 50, y)
+        y -= item.height +10  # add some padding for spacing
+
     p.save()
     buffer.seek(0)
     return buffer
@@ -243,24 +287,37 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 st.error(f"An error occurred while processing the response: {e}")
 
 # --- Export Functionality ---
+if st.session_state.messages:
+        formatted_history = format_chat_history(st.session_state.messages)
+        
+        # Multilingual button labels
+        word_label_en = "Export to Word (.docx)"
+        word_label_fr = "Exporter au format Word (.docx)"
+        pdf_label_en = "Export to PDF (.pdf)"
+        pdf_label_fr = "Exporter au format PDF (.pdf)"
 
-if st.session_state.messages: # Only show buttons if there's content
-    formatted_history = format_chat_history(st.session_state.messages)
+        if st.session_state.selected_language == "English":
+            word_label=word_label_en
+            pdf_label=pdf_label_en
+        else:
+            word_label = word_label_fr
+            pdf_label = pdf_label_fr
+            
 
-    # Word export
-    word_buffer = create_word_document(formatted_history)
-    st.download_button(
-        label="Export to Word (.docx)",
-        data=word_buffer,
-        file_name="chat_history.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+        # Word export
+        word_buffer = create_word_document(formatted_history)
+        st.download_button(
+            label=word_label,
+            data=word_buffer,
+            file_name="chat_history.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
 
-    # PDF export
-    pdf_buffer = create_pdf_document(formatted_history)
-    st.download_button(
-        label="Export to PDF (.pdf)",
-        data=pdf_buffer,
-        file_name="chat_history.pdf",
-        mime="application/pdf"
-    )
+        # PDF export
+        pdf_buffer = create_pdf_document(formatted_history)
+        st.download_button(
+            label=pdf_label,
+            data=pdf_buffer,
+            file_name="chat_history.pdf",
+            mime="application/pdf"
+        )
