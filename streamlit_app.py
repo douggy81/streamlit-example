@@ -208,23 +208,20 @@ def create_word_document(formatted_text):
             p = document.add_paragraph()
             html = markdown.markdown(line)
             soup = BeautifulSoup(html, 'html.parser')
-            try:
-                if soup.body:
-                    if soup.body.contents:
-                        for element in soup.body.contents:
-                            if element.name == 'p':
-                                for item in element.contents:
-                                    if str(item).startswith('<strong>'):
-                                        p.add_run(item.text).bold = True
-                                    elif str(item).startswith('<em>'):
-                                        p.add_run(item.text).italic = True
-                                    else:
-                                        p.add_run(str(item))
-                    else:
-                        document.add_paragraph(line)
-                else:
+            try:  # Correctly placed try...except block
+                if soup.body and soup.body.contents: # Corrected condition
+                    for element in soup.body.contents:
+                        if element.name == 'p':
+                            for item in element.contents:
+                                if str(item).startswith('<strong>'):
+                                    p.add_run(item.text).bold = True
+                                elif str(item).startswith('<em>'):
+                                    p.add_run(item.text).italic = True
+                                else:
+                                    p.add_run(str(item))
+                else:  # if soup.body does not exist or has no content, add the line
                     document.add_paragraph(line)
-            except AttributeError:
+            except AttributeError: # Catch any other unexpected AttributeErrors
                 document.add_paragraph(line)
         else: # Handle empty lines
             document.add_paragraph() # Add an empty paragraph for spacing
