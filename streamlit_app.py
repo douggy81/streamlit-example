@@ -207,10 +207,11 @@ def create_word_document(formatted_text):
         if line.strip():  # Check if the line has content after removing whitespace
             p = document.add_paragraph()
             html = markdown.markdown(line)
-            if html:  # Check if markdown parsing returned valid HTML
+            try: # add the try/except around the soup creation
                 soup = BeautifulSoup(html, 'html.parser')
-                try:
-                    if soup.body and soup.body.contents:
+
+                if soup.body:
+                    if soup.body.contents:
                         for element in soup.body.contents:
                             if element.name == 'p':
                                 for item in element.contents:
@@ -221,13 +222,13 @@ def create_word_document(formatted_text):
                                     else:
                                         p.add_run(str(item))
                     else:
-                        p.add_run(line)  # Add the original line if no <p> tags or no body
-                except AttributeError:  # Handle very rare cases of malformed HTML
-                    p.add_run(line)
-            else: #Handle the case when html is None
-                p.add_run(line) #Add the line if markdown fails
+                        document.add_paragraph(line)  # Add the original line if no <p> tags or no body
+                else: # Add the original line if there is no body
+                     document.add_paragraph(line)
+            except AttributeError:  # Handle very rare cases of malformed HTML or if soup is None, etc
+                document.add_paragraph(line)
         else:
-            document.add_paragraph()  # Add empty paragraph for spacing
+            document.add_paragraph() # Add empty paragraph for spacing
 
     buffer = BytesIO()
     document.save(buffer)
