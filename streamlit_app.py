@@ -208,20 +208,17 @@ def create_word_document(formatted_text):
         html = markdown.markdown(line)
         soup = BeautifulSoup(html, 'html.parser')
         try: # attempt to access soup.body and its contents inside a try/except
-            if soup.body: # check if soup.body exists
-                if soup.body.contents: #Check if there are contents  <- MOVED INSIDE TRY
-                    for element in soup.body.contents:
-                        if element.name == 'p':
-                            for item in element.contents:
-                                if str(item).startswith('<strong>'):
-                                    p.add_run(item.text).bold = True
-                                elif str(item).startswith('<em>'):
-                                    p.add_run(item.text).italic = True
-                                else:
-                                    p.add_run(str(item))
-                else: # if soup.body does not contain anything, add the line
-                    document.add_paragraph(line)
-            else:  # if soup.body does not exist, add the line as normal paragraph
+            if soup.body.contents: #Check if there are contents  <- MOVED INSIDE TRY
+                for element in soup.body.contents:
+                    if element.name == 'p':
+                        for item in element.contents:
+                            if str(item).startswith('<strong>'):
+                                p.add_run(item.text).bold = True
+                            elif str(item).startswith('<em>'):
+                                p.add_run(item.text).italic = True
+                            else:
+                                p.add_run(str(item))
+            else: # if soup.body does not contain anything, add the line
                 document.add_paragraph(line)
         except AttributeError: # if soup.body or soup.body.contents does not exist, just add the line
            document.add_paragraph(line)
