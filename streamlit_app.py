@@ -204,24 +204,31 @@ def create_word_document(formatted_text):
     """Creates a Word document in memory from the formatted text."""
     document = Document()
     for line in formatted_text.split('\n\n'):
-        p=document.add_paragraph()
+        p = document.add_paragraph()
         html = markdown.markdown(line)
         soup = BeautifulSoup(html, 'html.parser')
-        for element in soup.body.contents:
-             if element.name == 'p':
-                for item in element.contents:
-                    if str(item).startswith('<strong>'):
-                        p.add_run(item.text).bold = True
-                    elif str(item).startswith('<em>'):
-                        p.add_run(item.text).italic = True
-                    else:
-                         p.add_run(str(item))
+
+        if soup.body: # check if soup.body exists
+            if soup.body.contents: #Check if there are contents
+              for element in soup.body.contents:
+                    if element.name == 'p':
+                        for item in element.contents:
+                            if str(item).startswith('<strong>'):
+                                p.add_run(item.text).bold = True
+                            elif str(item).startswith('<em>'):
+                                p.add_run(item.text).italic = True
+                            else:
+                                p.add_run(str(item))
+            else: # if soup.body does not contain anything, add the line
+               document.add_paragraph(line)
+        else: # if soup.body does not exist, add the line as normal paragraph
+            document.add_paragraph(line)
     
     buffer = BytesIO()
     document.save(buffer)
     buffer.seek(0)
     return buffer
-
+    
 def create_pdf_document(formatted_text):
     """Creates a PDF document in memory from the formatted text."""
     buffer = BytesIO()
