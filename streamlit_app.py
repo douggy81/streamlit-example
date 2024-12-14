@@ -204,25 +204,28 @@ def create_word_document(formatted_text):
     """Creates a Word document in memory from the formatted text."""
     document = Document()
     for line in formatted_text.split('\n\n'):
-        if line.strip():  # Skip empty lines
+        if line.strip():  # Check if the line has content after removing whitespace
             p = document.add_paragraph()
             html = markdown.markdown(line)
-            soup = BeautifulSoup(html, 'html.parser')
-            try:
-                if soup.body and soup.body.contents: # access soup.body inside the try/except block.
-                    for element in soup.body.contents:
-                        if element.name == 'p':
-                            for item in element.contents:
-                                if str(item).startswith('<strong>'):
-                                    p.add_run(item.text).bold = True
-                                elif str(item).startswith('<em>'):
-                                    p.add_run(item.text).italic = True
-                                else:
-                                    p.add_run(str(item))
-                else:
-                    p.add_run(line)  # Add the original line if no <p> tags or no body
-            except AttributeError:  # Handle very rare cases of malformed HTML
-                p.add_run(line)
+            if html:  # Check if markdown parsing returned valid HTML
+                soup = BeautifulSoup(html, 'html.parser')
+                try:
+                    if soup.body and soup.body.contents:
+                        for element in soup.body.contents:
+                            if element.name == 'p':
+                                for item in element.contents:
+                                    if str(item).startswith('<strong>'):
+                                        p.add_run(item.text).bold = True
+                                    elif str(item).startswith('<em>'):
+                                        p.add_run(item.text).italic = True
+                                    else:
+                                        p.add_run(str(item))
+                    else:
+                        p.add_run(line)  # Add the original line if no <p> tags or no body
+                except AttributeError:  # Handle very rare cases of malformed HTML
+                    p.add_run(line)
+            else: #Handle the case when html is None
+                p.add_run(line) #Add the line if markdown fails
         else:
             document.add_paragraph()  # Add empty paragraph for spacing
 
