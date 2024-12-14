@@ -14,6 +14,14 @@ from google.ai.generativelanguage import (
     SafetySetting,
 )
 
+# --- Streamlit App Config ---
+st.set_page_config(
+    page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
+    page_icon="",
+    layout="centered",
+    menu_items=None
+)
+
 # --- Custom CSS to inject for setting the background color to a very light orange ---
 def set_light_orange_background():
     css_style = """
