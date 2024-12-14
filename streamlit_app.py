@@ -14,6 +14,12 @@ from google.ai.generativelanguage import (
     SafetySetting,
 )
 
+from docx import Document
+from docx.shared import Inches
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from io import BytesIO
+
 # --- Streamlit App Config ---
 st.set_page_config(
     page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
@@ -177,6 +183,41 @@ for message in st.session_state.messages:
 st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
 
 
+# --- Helper Functions ---
+
+def format_chat_history(messages):
+    """Formats the chat history into a string suitable for document export."""
+    formatted_text = ""
+    for message in messages:
+        formatted_text += f"{message['role'].capitalize()}: {message['content']}\n\n"
+    return formatted_text
+
+def create_word_document(formatted_text):
+    """Creates a Word document in memory from the formatted text."""
+    document = Document()
+    document.add_paragraph(formatted_text)
+    
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+    return buffer
+
+def create_pdf_document(formatted_text):
+    """Creates a PDF document in memory from the formatted text."""
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    textobject = p.beginText()
+    textobject.setTextOrigin(20,750)
+    textobject.setFont("Helvetica", 12)
+
+    for line in formatted_text.split('\n'):
+        textobject.textLine(line)
+    
+    p.drawText(textobject)
+    p.save()
+    buffer.seek(0)
+    return buffer
+
 # --- Handle LLM responses ---
 if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
@@ -200,3 +241,26 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
                 st.session_state.messages.append(message)
             except Exception as e:
                 st.error(f"An error occurred while processing the response: {e}")
+
+# --- Export Functionality ---
+
+if st.session_state.messages: # Only show buttons if there's content
+    formatted_history = format_chat_history(st.session_state.messages)
+
+    # Word export
+    word_buffer = create_word_document(formatted_history)
+    st.download_button(
+        label="Export to Word (.docx)",
+        data=word_buffer,
+        file_name="chat_history.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+
+    # PDF export
+    pdf_buffer = create_pdf_document(formatted_history)
+    st.download_button(
+        label="Export to PDF (.pdf)",
+        data=pdf_buffer,
+        file_name="chat_history.pdf",
+        mime="application/pdf"
+    )
