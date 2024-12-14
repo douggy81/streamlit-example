@@ -208,24 +208,20 @@ def create_word_document(formatted_text):
             p = document.add_paragraph()
             html = markdown.markdown(line)
             soup = BeautifulSoup(html, 'html.parser')
-
-            if soup.body:  # Check if body exists before accessing contents
-                try:  # Correctly placed try...except block
-                    if soup.body.contents:
-                        for element in soup.body.contents:
-                            if element.name == 'p':
-                                for item in element.contents:
-                                    if str(item).startswith('<strong>'):
-                                        p.add_run(item.text).bold = True
-                                    elif str(item).startswith('<em>'):
-                                        p.add_run(item.text).italic = True
-                                    else:
-                                        p.add_run(str(item))
-                    else:
-                        p.add_run(line)  # Add the original line if no <p> tags
-                except AttributeError:  # Handle very rare cases of malformed HTML
-                    p.add_run(line)
-            else:  # Add the original line if no body
+            try:
+                if soup.body and soup.body.contents: # access soup.body inside the try/except block.
+                    for element in soup.body.contents:
+                        if element.name == 'p':
+                            for item in element.contents:
+                                if str(item).startswith('<strong>'):
+                                    p.add_run(item.text).bold = True
+                                elif str(item).startswith('<em>'):
+                                    p.add_run(item.text).italic = True
+                                else:
+                                    p.add_run(str(item))
+                else:
+                    p.add_run(line)  # Add the original line if no <p> tags or no body
+            except AttributeError:  # Handle very rare cases of malformed HTML
                 p.add_run(line)
         else:
             document.add_paragraph()  # Add empty paragraph for spacing
@@ -234,7 +230,6 @@ def create_word_document(formatted_text):
     document.save(buffer)
     buffer.seek(0)
     return buffer
-
 
 def create_pdf_document(formatted_text):
     """Creates a PDF document in memory from the formatted text."""
