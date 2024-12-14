@@ -241,29 +241,33 @@ def create_pdf_document(formatted_text):
 
     story = []
     for line in formatted_text.split('\n\n'):
-        html = markdown.markdown(line)
-        soup = BeautifulSoup(html, 'html.parser')
-        
-        formatted_line=""
-        
-        try: #This is the fix
-            if soup.body:
-                for element in soup.body.contents:
-                     if element.name == 'p':
-                        for item in element.contents:
-                            if str(item).startswith('<strong>'):
-                                formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
-                            elif str(item).startswith('<em>'):
-                                formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
-                            else:
-                                 formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
-            else:
-                formatted_line=line # just add the line without formatting
-        except AttributeError:
-            formatted_line = line  # Use the original line if parsing fails
+        if line.strip():  # Skip empty lines
+            html = markdown.markdown(line)
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            formatted_line=""
+            
+            try:
+                if soup.body:
+                    for element in soup.body.contents:
+                         if element.name == 'p':
+                            for item in element.contents:
+                                if str(item).startswith('<strong>'):
+                                    formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
+                                elif str(item).startswith('<em>'):
+                                    formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
+                                else:
+                                     formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
+                else:
+                    formatted_line=line # just add the line without formatting
+            except AttributeError:
+                formatted_line = line  # Use the original line if parsing fails
 
-        story.append(Paragraph(formatted_line, normal_style))
-        
+            story.append(Paragraph(formatted_line, normal_style))
+        else:
+            story.append(Paragraph("", normal_style)) # Add empty paragraph for spacing in PDF
+
+
     y=750 #starting Y
     for item in story:
         item.wrapOn(p, 400, 50)
