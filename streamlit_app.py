@@ -33,9 +33,9 @@ from reportlab.lib.units import inch
 
 # --- Streamlit App Config ---
 st.set_page_config(
-    page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
+    page_title="Chat with the Gemini, your personal trainer in sales",
     page_icon="",
-    layout="centered",
+    layout="wide",  # Changed layout to wide for the sidebar to not shrink
     menu_items=None
 )
 
@@ -159,27 +159,29 @@ if "chat_engine" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- Language selection logic ---
-if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "Français"  # Default language
-update_title()
-temp_language = st.selectbox(
-    label="Choose your language / Choisissez votre langue",
-    options=["English", "Français"],
-    index=["English", "Français"].index(st.session_state.selected_language),
-    key="language_select"
-)
-confirm_button = st.button(label="Confirm / Confirmer")
+# --- Language selection logic in sidebar ---
+with st.sidebar:
+     st.header("Language Selection")
+     if 'selected_language' not in st.session_state:
+         st.session_state.selected_language = "Français"  # Default language
+     update_title()
+     temp_language = st.selectbox(
+         label="Choose your language / Choisissez votre langue",
+         options=["English", "Français"],
+         index=["English", "Français"].index(st.session_state.selected_language),
+         key="language_select"
+     )
+     confirm_button = st.button(label="Confirm / Confirmer")
 
 if confirm_button:
-    st.session_state.selected_language = temp_language
-    st.session_state.messages = []  # Clear previous messages
-    with st.spinner("Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."):
-        greeting = generate_greeting(st.session_state.selected_language)
-        st.session_state.messages.append({"role": "assistant", "content": greeting})
-    update_title()
+     st.session_state.selected_language = temp_language
+     st.session_state.messages = []  # Clear previous messages
+     with st.spinner("Generating greeting..." if st.session_state.selected_language == "English" else "Génération du message de bienvenue à l'utilisateur..."):
+         greeting = generate_greeting(st.session_state.selected_language)
+         st.session_state.messages.append({"role": "assistant", "content": greeting})
+     update_title()
 
-
+st.markdown("## Chat Area") # adding a subtitle to the main area
 # --- Chat interface ---
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
 prompt = st.chat_input(chat_text)
@@ -192,14 +194,13 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Display book link based on language ---
-book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://amzn.eu/d/04FT23KE) (The french version is now available on Amazon.fr. The english version is in the works)"
+book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://www.amazon.com/dp/B0CVD9853V) (the English version is now available on Amazon.com)"
 book_link_fr = "📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)"
 
 if st.session_state.selected_language == "English":
     st.markdown(book_link_en)
 else:
     st.markdown(book_link_fr)
-
 
 # --- Helper Functions ---
 
