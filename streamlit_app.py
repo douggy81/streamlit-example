@@ -31,6 +31,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.units import inch
 
+from datetime import datetime
+
 # --- Streamlit App Config ---
 st.set_page_config(
     page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
@@ -211,8 +213,46 @@ def format_chat_history(messages):
     return formatted_text
 
 def create_word_document(formatted_text):
-    """Creates a Word document in memory from the formatted text."""
+    """Creates a Word document in memory from the formatted text with header."""
     document = Document()
+
+    # Add header with page number and report title
+    section = document.sections[0]
+    header = section.header
+    header_paragraph = header.paragraphs[0]
+    header_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    
+    # Date for title
+    now = datetime.now()
+    formatted_date = now.strftime("%Y-%m-%d")
+    report_title = f"Report Generated on {formatted_date} by AI trained on Patrick Gassier's Book 'The Art of Sale'"
+    
+    run = header_paragraph.add_run(report_title)
+    run.bold = True
+    header_paragraph.add_run("\t\t\t") # Add tab for spacing
+
+    
+    # Add page number logic
+    run = header_paragraph.add_run("Page ")
+    run.italic = True
+    run = header_paragraph.add_run(" \t") # space after "page "
+    run.font.superscript = True
+
+    run = header_paragraph.add_run("PAGE ")
+    run.font.superscript = True
+
+    run = header_paragraph.add_run("  \t") # tab
+
+    run = header_paragraph.add_run("of ")
+    run.font.superscript = True
+    run.italic = True
+    run = header_paragraph.add_run("  \t")
+    run.font.superscript = True
+
+    run = header_paragraph.add_run("NUMPAGES") # Inserted Field 
+    run.font.superscript = True
+    
+    # Add the chat history
     for line in formatted_text.split('\n\n'):
         if line.strip():  # Check if the line has content after removing whitespace
             p = document.add_paragraph()
