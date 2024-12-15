@@ -192,7 +192,7 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Display book link based on language ---
-book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://www.amazon.com/dp/B0CVD9853V) (the English version is now available on Amazon.com)"
+book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://amzn.eu/d/04FT23KE) (The french version is now available on Amazon.fr. The english version is in the works)"
 book_link_fr = "📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)"
 
 if st.session_state.selected_language == "English":
