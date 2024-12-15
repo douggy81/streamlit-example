@@ -26,7 +26,7 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from io import BytesIO
 import markdown
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # <-- Corrected import
 
 # --- Streamlit App Config ---
 st.set_page_config(
