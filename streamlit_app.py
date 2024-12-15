@@ -27,6 +27,9 @@ from reportlab.lib.enums import TA_LEFT
 from io import BytesIO
 import markdown
 from bs4 import BeautifulSoup # <-- Corrected import
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.units import inch
 
 # --- Streamlit App Config ---
 st.set_page_config(
@@ -235,13 +238,24 @@ def create_word_document(formatted_text):
     buffer.seek(0)
     return buffer
 
+
+# Register a font
+def register_custom_font(font_path, font_name):
+    pdfmetrics.registerFont(TTFont(font_name, font_path))
+
+# Define font file path
+font_file_path = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")
+# Register a default font that can handle Unicode characters
+register_custom_font(font_file_path, 'DejaVuSans')
+
+
 def create_pdf_document(formatted_text):
     """Creates a PDF document in memory from the formatted text."""
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
     styles = getSampleStyleSheet()
     normal_style = styles['Normal']
-    normal_style.fontName = 'Arial Unicode MS' # Use a font that has emoji support
+    normal_style.fontName = 'DejaVuSans' # Use a font that has emoji support
 
     story = []
     for line in formatted_text.split('\n\n'):
@@ -257,11 +271,11 @@ def create_pdf_document(formatted_text):
                          if element.name == 'p':
                             for item in element.contents:
                                 if str(item).startswith('<strong>'):
-                                    formatted_line += f"<font color=black face='Arial Unicode MS'><b>{item.text}</b></font>"
+                                    formatted_line += f"<font color=black face='DejaVuSans'><b>{item.text}</b></font>"
                                 elif str(item).startswith('<em>'):
-                                    formatted_line += f"<font color=black face='Arial Unicode MS'><i>{item.text}</i></font>"
+                                    formatted_line += f"<font color=black face='DejaVuSans'><i>{item.text}</i></font>"
                                 else:
-                                     formatted_line += f"<font color=black face='Arial Unicode MS'>{item}</font>"
+                                     formatted_line += f"<font color=black face='DejaVuSans'>{item}</font>"
                 else:
                     formatted_line=line # just add the line without formatting
             except AttributeError:
