@@ -191,8 +191,14 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# --- Display book link ---
-st.markdown("📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)")
+# --- Display book link based on language ---
+book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://www.amazon.com/dp/B0CVD9853V) (the English version is now available on Amazon.com)"
+book_link_fr = "📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)"
+
+if st.session_state.selected_language == "English":
+    st.markdown(book_link_en)
+else:
+    st.markdown(book_link_fr)
 
 
 # --- Helper Functions ---
@@ -239,67 +245,6 @@ def create_word_document(formatted_text):
     buffer.seek(0)
     return buffer
 
-
-# Register a font
-def register_custom_font(font_path, font_name):
-    pdfmetrics.registerFont(TTFont(font_name, font_path))
-
-# Define font file path
-font_file_path = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")
-# Register a default font that can handle Unicode characters
-register_custom_font(font_file_path, 'DejaVuSans')
-
-
-def create_pdf_document(formatted_text):
-    """Creates a PDF document in memory from the formatted text."""
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    styles = getSampleStyleSheet()
-    normal_style = styles['Normal']
-    normal_style.fontName = 'DejaVuSans' # Use a font that has emoji support
-
-    story = []
-    for line in formatted_text.split('\n\n'):
-        if line.strip():  # Skip empty lines
-            html = markdown.markdown(line)
-            soup = BeautifulSoup(html, 'html.parser')
-            
-            formatted_line=""
-            
-            try:
-                if soup.body:
-                    for element in soup.body.contents:
-                         if element.name == 'p':
-                            for item in element.contents:
-                                if str(item).startswith('<strong>'):
-                                    formatted_line += f"<font color=black face='DejaVuSans'><b>{item.text}</b></font>"
-                                elif str(item).startswith('<em>'):
-                                    formatted_line += f"<font color=black face='DejaVuSans'><i>{item.text}</i></font>"
-                                else:
-                                     formatted_line += f"<font color=black face='DejaVuSans'>{item}</font>"
-                else:
-                    formatted_line=line # just add the line without formatting
-            except AttributeError:
-                formatted_line = line  # Use the original line if parsing fails
-
-            story.append(Paragraph(formatted_line, normal_style))
-        else:
-            story.append(Paragraph("", normal_style)) # Add empty paragraph for spacing in PDF
-
-
-    y=750 #starting Y
-    for item in story:
-        item.wrapOn(p, 400, 50)
-        if y < 50 : # add a page if necessary
-          p.showPage()
-          y=750
-        item.drawOn(p, 50, y)
-        y -= item.height +10  # add some padding for spacing
-
-    p.save()
-    buffer.seek(0)
-    return buffer
-
 # --- Handle LLM responses ---
 if st.session_state.messages and st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
@@ -328,19 +273,14 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] != "assis
 # Multilingual button labels
 word_label_en = "Export to Word (.docx)"
 word_label_fr = "Exporter au format Word (.docx)"
-pdf_label_en = "Export to PDF (.pdf)"
-pdf_label_fr = "Exporter au format PDF (.pdf)"
 
-# Initialize word_label and pdf_label before using them
+# Initialize word_label before using them
 word_label = word_label_en # assign the english default
-pdf_label = pdf_label_en # assign the english default
 
 if st.session_state.selected_language == "English":
     word_label = word_label_en
-    pdf_label = pdf_label_en
 else:
     word_label = word_label_fr
-    pdf_label = pdf_label_fr
 
 if st.session_state.messages:
     formatted_history = format_chat_history(st.session_state.messages)
@@ -352,13 +292,4 @@ if st.session_state.messages:
         data=word_buffer,
         file_name="chat_history.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
-
-    # PDF export
-    pdf_buffer = create_pdf_document(formatted_history)
-    st.download_button(
-        label=pdf_label,
-        data=pdf_buffer,
-        file_name="chat_history.pdf",
-        mime="application/pdf"
     )
