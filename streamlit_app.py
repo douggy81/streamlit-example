@@ -33,12 +33,11 @@ from reportlab.lib.units import inch
 
 # --- Streamlit App Config ---
 st.set_page_config(
-    page_title="Chat with the Gemini, your personal trainer in sales using a methodology developped by Patrick Gassier",
+    page_title="Chat with the Gemini, your personal trainer in sales",
     page_icon="",
-    layout="centered",
+    layout="wide",  # Changed layout to wide for the sidebar to not shrink
     menu_items=None
 )
-
 # --- Custom CSS to inject for setting the background color to a very light orange ---
 def set_light_orange_background():
     css_style = """
@@ -159,17 +158,19 @@ if "chat_engine" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- Language selection logic ---
-if 'selected_language' not in st.session_state:
-    st.session_state.selected_language = "Français"  # Default language
-update_title()
-temp_language = st.selectbox(
-    label="Choose your language / Choisissez votre langue",
-    options=["English", "Français"],
-    index=["English", "Français"].index(st.session_state.selected_language),
-    key="language_select"
-)
-confirm_button = st.button(label="Confirm / Confirmer")
+# --- Language selection logic in sidebar ---
+with st.sidebar:
+    st.header("Language Selection")
+    if 'selected_language' not in st.session_state:
+        st.session_state.selected_language = "Français"  # Default language
+    update_title()
+    temp_language = st.selectbox(
+        label="Choose your language / Choisissez votre langue",
+        options=["English", "Français"],
+        index=["English", "Français"].index(st.session_state.selected_language),
+        key="language_select"
+    )
+    confirm_button = st.button(label="Confirm / Confirmer")
 
 if confirm_button:
     st.session_state.selected_language = temp_language
@@ -179,7 +180,11 @@ if confirm_button:
         st.session_state.messages.append({"role": "assistant", "content": greeting})
     update_title()
 
-
+# --- The rest of your main content goes here ---
+# ... Chat interface, book link, and other components
+# Use st.write and st.markdown to display the main content elements
+    
+st.markdown("## Chat Area") # adding a subtitle to the main area
 # --- Chat interface ---
 chat_text="Your question..." if st.session_state.selected_language == "English" else "Votre question..."
 prompt = st.chat_input(chat_text)
@@ -192,14 +197,13 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Display book link based on language ---
-book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://amzn.eu/d/04FT23KE) (The french version is now available on Amazon.fr. The english version is in the works)"
+book_link_en = "📖 To get a copy of the book, please click on the following link: [The Art of Sale - A French Method](https://www.amazon.com/dp/B0CVD9853V) (the English version is now available on Amazon.com)"
 book_link_fr = "📖 Pour obtenir une copie du livre, cliquez sur le lien suivant : [L'Art de la Vente - Une méthode à la française](https://amzn.eu/d/04FT23KE) (la version française est disponible maintenant sur Amazon.fr)"
 
 if st.session_state.selected_language == "English":
     st.markdown(book_link_en)
 else:
     st.markdown(book_link_fr)
-
 
 # --- Helper Functions ---
 
@@ -213,11 +217,31 @@ def format_chat_history(messages):
 def create_word_document(formatted_text):
     """Creates a Word document in memory from the formatted text."""
     document = Document()
+    
+    # Header
+    header = document.sections[0].header
+    header_paragraph = header.paragraphs[0]
+
+    # Multilingual header content and book details
+    if st.session_state.selected_language == "English":
+         header_paragraph.text = "Patrick Gassier - The Art of Sale - A French Method\n"
+         book_link = "Purchase the book here: https://www.amazon.com/dp/B0CVD9853V \nPages: 234"
+    else:
+         header_paragraph.text = "Patrick Gassier - L'art de la Vente - Une méthode à la française\n"
+         book_link = "Achetez le livre ici: https://amzn.eu/d/04FT23KE \nPages: 222"
+
+    header_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    
+    header_paragraph_link = header.add_paragraph(book_link)
+    header_paragraph_link.alignment= WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    # Main content
     for line in formatted_text.split('\n\n'):
         if line.strip():  # Check if the line has content after removing whitespace
             p = document.add_paragraph()
             html = markdown.markdown(line)
-            try: # add the try/except around the soup creation
+            try:
                 soup = BeautifulSoup(html, 'html.parser')
 
                 if soup.body:
@@ -233,12 +257,18 @@ def create_word_document(formatted_text):
                                         p.add_run(str(item))
                     else:
                         document.add_paragraph(line)  # Add the original line if no <p> tags or no body
-                else: # Add the original line if there is no body
-                     document.add_paragraph(line)
+                else:
+                    document.add_paragraph(line)  # Add the original line if there is no body
             except AttributeError:  # Handle very rare cases of malformed HTML or if soup is None, etc
                 document.add_paragraph(line)
         else:
             document.add_paragraph() # Add empty paragraph for spacing
+    
+    # Add a footer
+    footer = document.sections[0].footer
+    footer_paragraph = footer.paragraphs[0]
+    footer_paragraph.text = "Generated with Chatbot Sales Trainer - Patrick Gassier's Methodology"
+    footer_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
     buffer = BytesIO()
     document.save(buffer)
