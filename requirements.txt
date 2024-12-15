@@ -9,4 +9,3 @@ python-docx
 reportlab
 markdown
 beautifulsoup4
-BeautifulSoup
